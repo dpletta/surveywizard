@@ -40,13 +40,54 @@ class TestFieldMappingLookups:
         assert row.redcap_field_type == RedcapFieldType.TEXT
 
 
+def _expected_qualtrics_question_count(project) -> int:
+    """Consecutive fields sharing ``matrix_group_name`` become one Matrix SQ."""
+    n = 0
+    i = 0
+    fields = project.fields
+    while i < len(fields):
+        f = fields[i]
+        if f.matrix_group_name is None:
+            n += 1
+            i += 1
+            continue
+        mg = f.matrix_group_name
+        while i < len(fields) and fields[i].matrix_group_name == mg:
+            i += 1
+        n += 1
+    return n
+
+
+def _expected_redcap_field_count(survey) -> int:
+    """Mirrors Qualtrics→REDCap expansion (matrix / TE·FORM / SBS)."""
+    total = 0
+    for q in survey.questions():
+        qt = q.QuestionType
+        sel = (q.Selector or "").upper()
+        raw = q.model_dump(mode="python")
+        if (qt == QuestionType.MATRIX or (qt == QuestionType.TE and sel == "FORM")) and q.Choices:
+            total += len(q.Choices)
+        elif qt == QuestionType.SBS and sel == "SBSMATRIX":
+            addq = raw.get("AdditionalQuestions") or {}
+            n = sum(
+                len(col["Choices"])
+                for col in addq.values()
+                if isinstance(col, dict)
+                and col.get("QuestionType") == "Matrix"
+                and col.get("Choices")
+            )
+            total += n if n else 1
+        else:
+            total += 1
+    return total
+
+
 class TestRedcapToQualtrics:
     def test_convert_fixture(self, redcap_example_xml: Path) -> None:
         project = parse_redcap_xml(redcap_example_xml)
         survey, _report = convert_redcap_to_qualtrics(project, seed=42)
 
-        # Every REDCap field becomes a Qualtrics question
-        assert len(survey.questions()) == len(project.fields)
+        assert len(survey.questions()) == _expected_qualtrics_question_count(project)
 
         # QIDs are unique
         qids = [q.QuestionID for q in survey.questions()]
@@ -150,22 +191,12 @@ class TestRedcapToQualtrics:
 
 class TestQualtricsToRedcap:
     def test_convert_each_fixture(self, qualtrics_fixtures: Path) -> None:
-        from surveywizard.models.qualtrics import QuestionType
-
         for fixture in sorted(qualtrics_fixtures.glob("*.qsf")):
             survey = parse_qsf(fixture)
             project, _report = convert_qualtrics_to_redcap(survey)
             assert project.globals.study_name
 
-            # Matrix questions expand to one REDCap field per row, so the
-            # field count is ``N_non_matrix + sum(rows)`` rather than N.
-            expected_min = 0
-            for q in survey.questions():
-                if q.QuestionType == QuestionType.MATRIX and q.Choices:
-                    expected_min += len(q.Choices)
-                else:
-                    expected_min += 1
-            assert len(project.fields) == expected_min
+            assert len(project.fields) == _expected_redcap_field_count(survey)
 
             # Variable names are valid (lowercase snake_case)
             for f in project.fields:

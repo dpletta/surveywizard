@@ -9,9 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **Matrix question expansion**: Qualtrics Matrix questions with N rows × M columns now expand into N REDCap fields sharing a matrix_group_name + shared codelist. Likert/SingleAnswer → radio, Likert/MultipleAnswer → checkbox, TE/Profile → text. The first row receives the original question text as its section header so the grouping is visible on import. Surfaced by team_skills.qsf (8 Matrix questions × 13 rows each = 104 new rows) and productivity_experiment.qsf (14 Matrix questions).
+- **Matrix question expansion**: Qualtrics Matrix questions with N rows × M columns now expand into N REDCap fields sharing a matrix_group_name + shared codelist. Likert/SingleAnswer → radio, Likert/MultipleAnswer → checkbox, TE/Profile/FORM → text. The first row receives the original question text as its section header so the grouping is visible on import. Surfaced by team_skills.qsf (8 Matrix questions × 13 rows each = 104 new rows) and productivity_experiment.qsf (14 Matrix questions).
+- **TE + FORM** (multi–text-entry form): Expands to one REDCap field per row, sharing a matrix group, matching Matrix/TE text behavior (productivity_experiment.qsf).
+- **SBS + SBSMatrix**: When `AdditionalQuestions` holds embedded Matrix columns, expands into one REDCap matrix group per column (rows from each column’s Matrix `Choices`). Unparseable side-by-side still falls back to a single text field with a warning (better_sample.qsf).
+- **REDCap → Qualtrics matrix regrouping**: Consecutive fields sharing the same `matrix_group_name` are emitted as one Qualtrics Matrix question. `Configuration.SurveyWizardMatrixRowVariables` records REDCap variable names so a REDCap → QSF → REDCap round trip keeps field names stable.
+- **CustomValidation**: `Validation.Settings.Type = CustomValidation` — inner `Logic` is passed through `qsf_display_logic_to_redcap` and merged with display-logic branching (INFO when translated, WARN when not). REDCap cannot reproduce custom error messages.
 - **Display-semantic operators** in the expression translator: Displayed, NotDisplayed, IsEmpty, IsNotEmpty, Answered, NotAnswered, Skipped, NotSkipped. Translated as REDCap presence checks ([var] = ''  / [var] <> '') with an INFO-level report entry explaining the loss of choice-specific semantic. Surfaced by productivity_experiment.qsf (18 previously-dropped NotDisplayed conditions now preserved).
-- SBS (side-by-side) questions now emit a dedicated WARNING instead of being conflated with generic matrix loss.
+- **Item groups**: Expanded questions (matrix, TE/FORM, SBS) register every emitted REDCap field OID per Qualtrics `QuestionID` so instruments include all rows.
 
 ## [0.1.0] — 2026-04-21
 

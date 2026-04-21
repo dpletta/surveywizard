@@ -5,6 +5,7 @@ from __future__ import annotations
 import contextlib
 import re
 from datetime import UTC, datetime
+from typing import Any
 
 from surveywizard.converters.expression_translator import qsf_display_logic_to_redcap
 from surveywizard.converters.field_mapping import lookup_from_qualtrics
@@ -44,6 +45,12 @@ def _sanitize_variable(name: str, *, fallback: str = "field") -> str:
     return cleaned
 
 
+def _additional_questions_dict(q: Question) -> dict[str, Any] | None:
+    raw = q.model_dump(mode="python")
+    addq = raw.get("AdditionalQuestions")
+    return addq if isinstance(addq, dict) and addq else None
+
+
 class QualtricsToRedcap:
     def __init__(self, survey: QualtricsSurvey) -> None:
         self.survey = survey
@@ -52,6 +59,8 @@ class QualtricsToRedcap:
             source_name=survey.SurveyEntry.SurveyName or survey.SurveyEntry.SurveyID,
         )
         self._qid_to_variable: dict[str, str] = {}
+        #: Every REDCap field oid emitted for a given Qualtrics QuestionID (for item groups).
+        self._question_id_to_oids: dict[str, list[str]] = {}
 
     def convert(self) -> RedcapProject:
         now = datetime.now(tz=UTC).strftime("%Y-%m-%dT%H:%M:%S")
@@ -114,6 +123,16 @@ class QualtricsToRedcap:
         if q.QuestionType == QuestionType.MATRIX and q.Choices:
             return self._expand_matrix(q, variable)
 
+        # Side-by-side matrix: one REDCap matrix group per column (embedded Matrix per AdditionalQuestions).
+        if q.QuestionType == QuestionType.SBS and (q.Selector or "").upper() == "SBSMATRIX":
+            addq = _additional_questions_dict(q)
+            if addq:
+                return self._expand_sbs_matrix(q, variable, addq)
+
+        # TE + FORM — multi-line form; each choice is a text entry row (like a text matrix).
+        if q.QuestionType == QuestionType.TE and (q.Selector or "").upper() == "FORM" and q.Choices:
+            return self._expand_te_form(q, variable)
+
         content_type = None
         try:
             val_settings = q.Validation.Settings
@@ -142,6 +161,7 @@ class QualtricsToRedcap:
             self.report,
             variable,
         )
+        branching = self._merge_custom_validation_branching(q, branching, variable)
 
         field = RedcapField(
             oid=variable,
@@ -176,10 +196,11 @@ class QualtricsToRedcap:
                 variable,
             )
 
+        self._question_id_to_oids[q.QuestionID] = [field.oid]
         return [field], ([code_list] if code_list else [])
 
     def _expand_matrix(
-        self, q: Question, base_variable: str
+        self, q: Question, base_variable: str, *, defer_qid_registration: bool = False
     ) -> tuple[list[RedcapField], list[RedcapCodeList]]:
         """Expand a Matrix question into one REDCap field per row.
 
@@ -196,7 +217,7 @@ class QualtricsToRedcap:
         selector = q.Selector or ""
 
         # Decide per-row field type from selector/sub-selector.
-        is_text_matrix = selector.upper() in {"TE", "TEXTENTRY", "PROFILE"}
+        is_text_matrix = selector.upper() in {"TE", "TEXTENTRY", "PROFILE", "FORM"}
         is_multi = sub in {"MultipleAnswer", "MultiAnswer"}
 
         if is_text_matrix:
@@ -236,8 +257,11 @@ class QualtricsToRedcap:
             self.report,
             base_variable,
         )
+        branching = self._merge_custom_validation_branching(q, branching, base_variable)
 
         row_keys = [str(i) for i in q.ChoiceOrder] if q.ChoiceOrder else list(q.Choices.keys())
+        cfg = q.Configuration if isinstance(q.Configuration, dict) else {}
+        sw_vars = cfg.get("SurveyWizardMatrixRowVariables")
         fields: list[RedcapField] = []
         used_variables: set[str] = set()
         for idx, row_key in enumerate(row_keys):
@@ -245,8 +269,11 @@ class QualtricsToRedcap:
             if row is None:
                 continue
             row_label = row.Display if isinstance(row.Display, str) else str(row.Display)
-            row_slug = _sanitize_variable(row_label, fallback=f"row{idx + 1}") or f"row{idx + 1}"
-            row_var = f"{base_variable}_{row_slug}"[:40]
+            if isinstance(sw_vars, list) and idx < len(sw_vars) and isinstance(sw_vars[idx], str):
+                row_var = _sanitize_variable(sw_vars[idx], fallback=f"row{idx + 1}")[:40]
+            else:
+                row_slug = _sanitize_variable(row_label, fallback=f"row{idx + 1}") or f"row{idx + 1}"
+                row_var = f"{base_variable}_{row_slug}"[:40]
             # Disambiguate collisions within this matrix
             counter = 1
             original = row_var
@@ -272,17 +299,235 @@ class QualtricsToRedcap:
 
         # Re-point the QID → variable lookup to the first row so later DisplayLogic
         # translations referencing this QID resolve to a real REDCap variable.
+        if not defer_qid_registration:
+            if fields:
+                self._qid_to_variable[q.QuestionID] = fields[0].variable
+            self._question_id_to_oids[q.QuestionID] = [f.oid for f in fields]
+
+        if not defer_qid_registration:
+            self.report.info(
+                f"qsf:Matrix/{selector}", f"redcap:{row_field_type.value}",
+                f"Expanded Matrix into {len(fields)} row fields sharing matrix group "
+                f"{matrix_group!r}" + (f" and codelist {shared_code_list.oid!r}" if shared_code_list else "") + ".",
+                base_variable,
+            )
+
+        return fields, ([shared_code_list] if shared_code_list else [])
+
+    def _expand_sbs_matrix(
+        self, q: Question, base_variable: str, addq: dict[str, Any]
+    ) -> tuple[list[RedcapField], list[RedcapCodeList]]:
+        """Expand SBS + SBSMatrix into one REDCap matrix group per column."""
+        keys = sorted(addq.keys(), key=lambda k: (int(k) if str(k).isdigit() else 0, str(k)))
+        all_fields: list[RedcapField] = []
+        all_lists: list[RedcapCodeList] = []
+        parent_val = q.Validation.model_dump(mode="python") if q.Validation else {}
+        parent_fr = "OFF"
+        with contextlib.suppress(AttributeError):
+            parent_fr = getattr(q.Validation.Settings, "ForceResponse", "OFF") or "OFF"
+        for col_idx, ck in enumerate(keys, start=1):
+            col = addq[ck]
+            if not isinstance(col, dict):
+                continue
+            if col.get("QuestionType") != "Matrix":
+                self.report.warn(
+                    "qsf:SBS", "redcap:unknown",
+                    f"SBS AdditionalQuestions[{ck!r}] is not Matrix; skipped.",
+                    base_variable,
+                )
+                continue
+            if col_idx == 1:
+                val_for_col = col.get("Validation") or parent_val
+            else:
+                # Apply CustomValidation merge only on the first column; repeat would AND the same rule.
+                val_for_col = col.get("Validation") or {
+                    "Settings": {"ForceResponse": parent_fr, "Type": "None"}
+                }
+            col_payload: dict[str, Any] = {
+                "QuestionID": q.QuestionID,
+                "QuestionText": (
+                    q.QuestionText if col_idx == 1 else (col.get("QuestionText") or "")
+                ),
+                "DataExportTag": f"{base_variable}_c{col_idx}",
+                "QuestionType": "Matrix",
+                "Selector": col.get("Selector", "Likert"),
+                "SubSelector": col.get("SubSelector", ""),
+                "Choices": col.get("Choices", {}),
+                "ChoiceOrder": col.get("ChoiceOrder", []),
+                "Answers": col.get("Answers", {}),
+                "AnswerOrder": col.get("AnswerOrder", []),
+                "Validation": val_for_col,
+                "DisplayLogic": q.DisplayLogic,
+            }
+            col_q = Question.model_validate(col_payload)
+            sub_base = f"{base_variable}_c{col_idx}"
+            rows, cls = self._expand_matrix(
+                col_q, sub_base, defer_qid_registration=True
+            )
+            all_fields.extend(rows)
+            all_lists.extend(cls)
+
+        if not all_fields:
+            return self._fallback_sbs_warning(q, base_variable)
+
+        if all_fields:
+            self._qid_to_variable[q.QuestionID] = all_fields[0].variable
+        self._question_id_to_oids[q.QuestionID] = [f.oid for f in all_fields]
+
+        self.report.info(
+            "qsf:SBS/SBSMatrix", "redcap:matrix",
+            f"Expanded side-by-side into {len(all_fields)} fields across {len(keys)} column matrix groups.",
+            base_variable,
+        )
+        return all_fields, all_lists
+
+    def _fallback_sbs_warning(
+        self, q: Question, base_variable: str
+    ) -> tuple[list[RedcapField], list[RedcapCodeList]]:
+        """Single text field + warning when SBS cannot be decomposed."""
+        mapping = lookup_from_qualtrics(q.QuestionType, q.Selector, q.SubSelector, None)
+        required = False
+        with contextlib.suppress(AttributeError):
+            required = getattr(q.Validation.Settings, "ForceResponse", "OFF") == "ON"
+        branching = qsf_display_logic_to_redcap(
+            q.DisplayLogic if isinstance(q.DisplayLogic, dict) else None,
+            self._qid_to_variable.get,
+            self.report,
+            base_variable,
+        )
+        branching = self._merge_custom_validation_branching(q, branching, base_variable)
+        field = RedcapField(
+            oid=base_variable,
+            variable=base_variable,
+            field_type=mapping.redcap_field_type,
+            label=q.QuestionText or "",
+            data_type=self._infer_data_type(mapping.redcap_field_type, mapping.redcap_validation),
+            validation_type=mapping.redcap_validation,
+            required=required,
+            branching_logic=branching,
+        )
+        self.report.warn(
+            f"qsf:{q.QuestionType.value}", f"redcap:{mapping.redcap_field_type.value}",
+            "Qualtrics side-by-side could not be expanded — emitted as a single REDCap text field.",
+            base_variable,
+        )
+        self._question_id_to_oids[q.QuestionID] = [field.oid]
+        return [field], []
+
+    def _expand_te_form(
+        self, q: Question, base_variable: str
+    ) -> tuple[list[RedcapField], list[RedcapCodeList]]:
+        """Expand TE + FORM into one REDCap text field per form row (shared matrix group)."""
+        content_type = None
+        with contextlib.suppress(AttributeError):
+            content_type = getattr(q.Validation.Settings, "ContentType", None)
+        mapping = lookup_from_qualtrics(
+            QuestionType.TE, "SL", "", content_type
+        )
+
+        matrix_group = f"m_{base_variable}"[:40]
+
+        required = False
+        with contextlib.suppress(AttributeError):
+            required = getattr(q.Validation.Settings, "ForceResponse", "OFF") == "ON"
+
+        branching = qsf_display_logic_to_redcap(
+            q.DisplayLogic if isinstance(q.DisplayLogic, dict) else None,
+            self._qid_to_variable.get,
+            self.report,
+            base_variable,
+        )
+        branching = self._merge_custom_validation_branching(q, branching, base_variable)
+
+        row_keys = [str(i) for i in q.ChoiceOrder] if q.ChoiceOrder else list(q.Choices.keys())
+        fields: list[RedcapField] = []
+        used_variables: set[str] = set()
+        for idx, row_key in enumerate(row_keys):
+            row = q.Choices.get(row_key)
+            if row is None:
+                continue
+            row_label = row.Display if isinstance(row.Display, str) else str(row.Display)
+            row_slug = _sanitize_variable(row_label, fallback=f"row{idx + 1}") or f"row{idx + 1}"
+            row_var = f"{base_variable}_{row_slug}"[:40]
+            counter = 1
+            original = row_var
+            while row_var in used_variables:
+                row_var = f"{original[:37]}_{counter}"
+                counter += 1
+            used_variables.add(row_var)
+
+            fields.append(
+                RedcapField(
+                    oid=row_var,
+                    variable=row_var,
+                    field_type=mapping.redcap_field_type,
+                    label=row_label,
+                    data_type=self._infer_data_type(
+                        mapping.redcap_field_type, mapping.redcap_validation
+                    ),
+                    validation_type=mapping.redcap_validation,
+                    required=required,
+                    branching_logic=branching if idx == 0 else None,
+                    matrix_group_name=matrix_group,
+                    section_header=q.QuestionText if idx == 0 else None,
+                )
+            )
+
         if fields:
             self._qid_to_variable[q.QuestionID] = fields[0].variable
 
         self.report.info(
-            f"qsf:Matrix/{selector}", f"redcap:{row_field_type.value}",
-            f"Expanded Matrix into {len(fields)} row fields sharing matrix group "
-            f"{matrix_group!r}" + (f" and codelist {shared_code_list.oid!r}" if shared_code_list else "") + ".",
+            "qsf:TE/FORM", f"redcap:{mapping.redcap_field_type.value}",
+            f"Expanded TE+FORM into {len(fields)} text fields sharing matrix group {matrix_group!r}.",
             base_variable,
         )
 
-        return fields, ([shared_code_list] if shared_code_list else [])
+        self._question_id_to_oids[q.QuestionID] = [f.oid for f in fields]
+        return fields, []
+
+    def _merge_custom_validation_branching(
+        self,
+        q: Question,
+        existing: str | None,
+        variable: str,
+    ) -> str | None:
+        """Append CustomValidation.Logic as REDCap branching when translatable."""
+        try:
+            settings = q.Validation.Settings
+        except AttributeError:
+            return existing
+        val_type = getattr(settings, "Type", None)
+        if val_type != "CustomValidation":
+            return existing
+        raw_cv = getattr(settings, "CustomValidation", None)
+        if not isinstance(raw_cv, dict):
+            return existing
+        logic = raw_cv.get("Logic")
+        if not isinstance(logic, dict):
+            return existing
+        translated = qsf_display_logic_to_redcap(
+            logic,
+            self._qid_to_variable.get,
+            self.report,
+            variable,
+        )
+        if not translated:
+            self.report.warn(
+                "qsf:Validation.CustomValidation", "redcap:branching_logic",
+                "Qualtrics CustomValidation logic was not translated to REDCap (unsupported "
+                "or empty); review field after import.",
+                variable,
+            )
+            return existing
+        self.report.info(
+            "qsf:Validation.CustomValidation", "redcap:branching_logic",
+            "Merged CustomValidation.Logic into branching_logic as an approximation; "
+            "REDCap cannot enforce custom error messages from Qualtrics.",
+            variable,
+        )
+        if existing and translated:
+            return f"({existing}) and ({translated})"
+        return translated or existing
 
     @staticmethod
     def _infer_data_type(
@@ -355,6 +600,12 @@ class QualtricsToRedcap:
             field_oids: list[str] = []
             for element in block.BlockElements:
                 if element.Type != "Question" or not element.QuestionID:
+                    continue
+                expanded = self._question_id_to_oids.get(element.QuestionID)
+                if expanded:
+                    for oid in expanded:
+                        if oid not in field_oids:
+                            field_oids.append(oid)
                     continue
                 variable = self._qid_to_variable.get(element.QuestionID)
                 if variable is None:

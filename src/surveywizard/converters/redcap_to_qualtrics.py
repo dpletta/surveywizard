@@ -17,6 +17,7 @@ from surveywizard.models.qualtrics import (
     QSFElementCode,
     QualtricsSurvey,
     Question,
+    QuestionType,
     QuestionValidation,
     SurveyElement,
     SurveyEntry,
@@ -48,12 +49,22 @@ class RedcapToQualtrics:
     def convert(self) -> QualtricsSurvey:
         entry = self._build_survey_entry()
 
-        # First pass — allocate a QID per REDCap field so branching logic can
-        # reference them in the second pass.
-        for field in self.project.fields:
-            self._var_to_qid[field.variable] = self.ids.qid()
+        groups = self._field_groups()
+        # Allocate QIDs: one per non-matrix field / one shared QID per matrix group.
+        for group in groups:
+            if len(group) == 1 and group[0].matrix_group_name is None:
+                self._var_to_qid[group[0].variable] = self.ids.qid()
+            else:
+                qid = self.ids.qid()
+                for f in group:
+                    self._var_to_qid[f.variable] = qid
 
-        questions: list[Question] = [self._convert_field(f) for f in self.project.fields]
+        questions: list[Question] = []
+        for group in groups:
+            if len(group) == 1 and group[0].matrix_group_name is None:
+                questions.append(self._convert_field(group[0]))
+            else:
+                questions.append(self._convert_matrix_group(group))
 
         blocks, _block_elements_by_oid = self._build_blocks(questions)
         flow = self._build_flow(blocks)
@@ -211,6 +222,140 @@ class RedcapToQualtrics:
                 field.oid,
             )
 
+    def _field_groups(self) -> list[list[RedcapField]]:
+        """Split fields into singletons and consecutive runs sharing ``matrix_group_name``."""
+        groups: list[list[RedcapField]] = []
+        current: list[RedcapField] = []
+        current_key: str | None = None
+
+        def flush() -> None:
+            nonlocal current, current_key
+            if current:
+                groups.append(current)
+                current = []
+                current_key = None
+
+        for f in self.project.fields:
+            key = f.matrix_group_name
+            if key is None:
+                flush()
+                groups.append([f])
+                continue
+            if key != current_key:
+                flush()
+                current = [f]
+                current_key = key
+            else:
+                current.append(f)
+        flush()
+        return groups
+
+    def _convert_matrix_group(self, rows: list[RedcapField]) -> Question:
+        """Build one Qualtrics Matrix ``Question`` from REDCap matrix rows."""
+        first = rows[0]
+        qid = self._var_to_qid[first.variable]
+        mg = first.matrix_group_name or ""
+        export_tag = mg[2:] if mg.startswith("m_") else first.variable
+
+        field_types = {f.field_type for f in rows}
+        if len(field_types) > 1:
+            self.report.warn(
+                "redcap:matrix_group", "qsf:Matrix",
+                "Matrix group rows have mixed field types — using the first row's type.",
+                first.oid,
+            )
+        ft = first.field_type
+
+        if ft == RedcapFieldType.TEXT:
+            selector = "TE"
+            sub_selector = ""
+        elif ft == RedcapFieldType.CHECKBOX:
+            selector = "Likert"
+            sub_selector = "MultipleAnswer"
+        else:
+            selector = "Likert"
+            sub_selector = "SingleAnswer"
+
+        stem = next((r.section_header for r in rows if r.section_header), None) or first.label
+        choices: dict[str, Choice] = {}
+        choice_order: list[int] = []
+        for i, f in enumerate(rows, start=1):
+            choices[str(i)] = Choice(Display=f.label)
+            choice_order.append(i)
+
+        mapping = lookup_from_redcap(first.field_type, first.validation_type)
+        v_field = RedcapField(
+            oid=first.oid,
+            variable=first.variable,
+            field_type=first.field_type,
+            label=first.label,
+            required=any(r.required for r in rows),
+            validation_type=first.validation_type,
+            validation_min=first.validation_min,
+            validation_max=first.validation_max,
+            data_type=first.data_type,
+        )
+
+        cfg: dict[str, Any] = {"QuestionDescriptionOption": "UseText"}
+        cfg["SurveyWizardMatrixRowVariables"] = [r.variable for r in rows]
+
+        question = Question(
+            QuestionID=qid,
+            QuestionText=stem,
+            DataExportTag=export_tag,
+            QuestionType=QuestionType.MATRIX,
+            Selector=selector,
+            SubSelector=sub_selector,
+            QuestionDescription=(stem[:255] if stem else ""),
+            Configuration=cfg,
+            Choices=choices,
+            ChoiceOrder=choice_order,
+            Validation=self._build_validation(v_field, mapping),
+        )
+
+        cl_ref = first.code_list_ref
+        if cl_ref and ft != RedcapFieldType.TEXT:
+            cl: RedcapCodeList | None = self.project.code_list_by_oid(cl_ref)
+            if cl is None:
+                self.report.warn(
+                    "redcap:code_list", "qsf:Answers",
+                    f"CodeList {cl_ref!r} missing — matrix scale left empty.",
+                    first.oid,
+                )
+            else:
+                answers: dict[str, Choice] = {}
+                answer_order_nums: list[int] = []
+                for item in cl.items:
+                    key = item.coded_value
+                    answers[key] = Choice(Display=item.decode)
+                    with contextlib.suppress(ValueError):
+                        answer_order_nums.append(int(key))
+                question.Answers = answers
+                question.AnswerOrder = (
+                    answer_order_nums if answer_order_nums else list(range(1, len(answers) + 1))
+                )
+
+        self._attach_display_logic(question, first)
+
+        self.report.info(
+            "redcap:matrix_group", "qsf:Matrix",
+            f"Grouped {len(rows)} REDCap fields into one Matrix question (export tag {export_tag!r}).",
+            first.oid,
+        )
+        return question
+
+    def _field_for_block_layout(self, question: Question) -> RedcapField | None:
+        """Resolve REDCap field for ordering; matrix stem may not equal any ``variable``."""
+        direct = self.project.field_by_variable(question.DataExportTag)
+        if direct is not None:
+            return direct
+        tag = question.DataExportTag
+        for cand in self.project.fields:
+            mg = cand.matrix_group_name
+            if mg and mg.startswith("m_") and mg[2:] == tag:
+                return cand
+        return None
+
     # ---- Block / Flow assembly -----
 
     def _build_blocks(
@@ -226,7 +371,7 @@ class RedcapToQualtrics:
             elements: list[BlockElement] = []
             section_seen: set[str] = set()
             for question in questions:
-                field = self.project.field_by_variable(question.DataExportTag)
+                field = self._field_for_block_layout(question)
                 if field is None:
                     continue
                 owning = instrument_for_field.get(field.oid)
@@ -253,7 +398,7 @@ class RedcapToQualtrics:
         # Handle any fields that weren't in an instrument → bucket into a leftover block
         uncategorized: list[BlockElement] = []
         for question in questions:
-            field = self.project.field_by_variable(question.DataExportTag)
+            field = self._field_for_block_layout(question)
             if field is None:
                 continue
             if instrument_for_field.get(field.oid) is None:
