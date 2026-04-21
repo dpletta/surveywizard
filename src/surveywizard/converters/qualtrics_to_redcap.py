@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 import re
 from datetime import UTC, datetime
 
@@ -77,10 +78,9 @@ class QualtricsToRedcap:
         fields: list[RedcapField] = []
         code_lists: list[RedcapCodeList] = []
         for q in questions:
-            field, code_list = self._convert_question(q)
-            fields.append(field)
-            if code_list is not None:
-                code_lists.append(code_list)
+            new_fields, new_code_lists = self._convert_question(q)
+            fields.extend(new_fields)
+            code_lists.extend(new_code_lists)
 
         instruments, item_groups = self._build_instruments(blocks, fields)
         events = self._build_default_event(instruments)
@@ -99,8 +99,21 @@ class QualtricsToRedcap:
             code_lists=code_lists,
         )
 
-    def _convert_question(self, q: Question) -> tuple[RedcapField, RedcapCodeList | None]:
+    def _convert_question(
+        self, q: Question
+    ) -> tuple[list[RedcapField], list[RedcapCodeList]]:
+        """Convert one Qualtrics question into 1+ REDCap fields (+ codelists).
+
+        Matrix questions expand to one REDCap field per row sharing a common
+        ``matrix_group_name`` + codelist. Everything else produces a single
+        field.
+        """
         variable = self._qid_to_variable[q.QuestionID]
+
+        # Matrix question — expand rows into N fields.
+        if q.QuestionType == QuestionType.MATRIX and q.Choices:
+            return self._expand_matrix(q, variable)
+
         content_type = None
         try:
             val_settings = q.Validation.Settings
@@ -148,11 +161,11 @@ class QualtricsToRedcap:
                 "Descriptive text carried across — visible to respondent but captures no data.",
                 variable,
             )
-        if q.QuestionType in {QuestionType.SBS, QuestionType.MATRIX} and not q.Choices:
+        if q.QuestionType == QuestionType.SBS:
             self.report.warn(
                 f"qsf:{q.QuestionType.value}", f"redcap:{mapping.redcap_field_type.value}",
-                "Qualtrics matrix/side-by-side with no rows mapped — REDCap field "
-                "produced but will need manual matrix grouping post-import.",
+                "Qualtrics side-by-side collapsed to a single REDCap text field — "
+                "reconstruct manually as a matrix group post-import.",
                 variable,
             )
         if q.QuestionType in {QuestionType.HL, QuestionType.HOTSPOT, QuestionType.DRAW}:
@@ -163,7 +176,113 @@ class QualtricsToRedcap:
                 variable,
             )
 
-        return field, code_list
+        return [field], ([code_list] if code_list else [])
+
+    def _expand_matrix(
+        self, q: Question, base_variable: str
+    ) -> tuple[list[RedcapField], list[RedcapCodeList]]:
+        """Expand a Matrix question into one REDCap field per row.
+
+        Row layout follows Qualtrics conventions:
+          - ``Choices`` = rows (one REDCap field each)
+          - ``Answers`` = the shared response scale (one REDCap codelist)
+
+        Selector determines the per-row field type:
+          - ``Likert`` + ``SingleAnswer``  → radio with shared codelist
+          - ``Likert`` + ``MultipleAnswer`` → checkbox with shared codelist
+          - ``TE`` / ``TextEntry`` / ``Profile`` → free text per row (no codelist)
+        """
+        sub = q.SubSelector or ""
+        selector = q.Selector or ""
+
+        # Decide per-row field type from selector/sub-selector.
+        is_text_matrix = selector.upper() in {"TE", "TEXTENTRY", "PROFILE"}
+        is_multi = sub in {"MultipleAnswer", "MultiAnswer"}
+
+        if is_text_matrix:
+            row_field_type = RedcapFieldType.TEXT
+        elif is_multi:
+            row_field_type = RedcapFieldType.CHECKBOX
+        else:
+            row_field_type = RedcapFieldType.RADIO
+
+        matrix_group = f"m_{base_variable}"[:40]
+
+        # Shared codelist built from Answers (columns) — not used for text matrices.
+        shared_code_list: RedcapCodeList | None = None
+        if not is_text_matrix and q.Answers:
+            items = []
+            ordered = [str(i) for i in q.AnswerOrder] if q.AnswerOrder else list(q.Answers.keys())
+            for idx, key in enumerate(ordered):
+                ans = q.Answers.get(key)
+                if ans is None:
+                    continue
+                display = ans.Display if isinstance(ans.Display, str) else str(ans.Display)
+                items.append(RedcapCodeListItem(coded_value=key, decode=display, ordered_rank=idx))
+            shared_code_list = RedcapCodeList(
+                oid=f"{base_variable}.matrix_choices",
+                name=base_variable,
+                variable=base_variable,
+                items=items,
+            )
+
+        required = False
+        with contextlib.suppress(AttributeError):
+            required = getattr(q.Validation.Settings, "ForceResponse", "OFF") == "ON"
+
+        branching = qsf_display_logic_to_redcap(
+            q.DisplayLogic if isinstance(q.DisplayLogic, dict) else None,
+            self._qid_to_variable.get,
+            self.report,
+            base_variable,
+        )
+
+        row_keys = [str(i) for i in q.ChoiceOrder] if q.ChoiceOrder else list(q.Choices.keys())
+        fields: list[RedcapField] = []
+        used_variables: set[str] = set()
+        for idx, row_key in enumerate(row_keys):
+            row = q.Choices.get(row_key)
+            if row is None:
+                continue
+            row_label = row.Display if isinstance(row.Display, str) else str(row.Display)
+            row_slug = _sanitize_variable(row_label, fallback=f"row{idx + 1}") or f"row{idx + 1}"
+            row_var = f"{base_variable}_{row_slug}"[:40]
+            # Disambiguate collisions within this matrix
+            counter = 1
+            original = row_var
+            while row_var in used_variables:
+                row_var = f"{original[:37]}_{counter}"
+                counter += 1
+            used_variables.add(row_var)
+
+            fields.append(
+                RedcapField(
+                    oid=row_var,
+                    variable=row_var,
+                    field_type=row_field_type,
+                    label=row_label,
+                    data_type="text",
+                    required=required,
+                    branching_logic=branching if idx == 0 else None,
+                    matrix_group_name=matrix_group,
+                    section_header=q.QuestionText if idx == 0 else None,
+                    code_list_ref=shared_code_list.oid if shared_code_list else None,
+                )
+            )
+
+        # Re-point the QID → variable lookup to the first row so later DisplayLogic
+        # translations referencing this QID resolve to a real REDCap variable.
+        if fields:
+            self._qid_to_variable[q.QuestionID] = fields[0].variable
+
+        self.report.info(
+            f"qsf:Matrix/{selector}", f"redcap:{row_field_type.value}",
+            f"Expanded Matrix into {len(fields)} row fields sharing matrix group "
+            f"{matrix_group!r}" + (f" and codelist {shared_code_list.oid!r}" if shared_code_list else "") + ".",
+            base_variable,
+        )
+
+        return fields, ([shared_code_list] if shared_code_list else [])
 
     @staticmethod
     def _infer_data_type(

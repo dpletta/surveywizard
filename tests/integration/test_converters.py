@@ -150,12 +150,23 @@ class TestRedcapToQualtrics:
 
 class TestQualtricsToRedcap:
     def test_convert_each_fixture(self, qualtrics_fixtures: Path) -> None:
+        from surveywizard.models.qualtrics import QuestionType
+
         for fixture in sorted(qualtrics_fixtures.glob("*.qsf")):
             survey = parse_qsf(fixture)
             project, _report = convert_qualtrics_to_redcap(survey)
             assert project.globals.study_name
-            # Every Qualtrics question becomes a REDCap field
-            assert len(project.fields) == len(survey.questions())
+
+            # Matrix questions expand to one REDCap field per row, so the
+            # field count is ``N_non_matrix + sum(rows)`` rather than N.
+            expected_min = 0
+            for q in survey.questions():
+                if q.QuestionType == QuestionType.MATRIX and q.Choices:
+                    expected_min += len(q.Choices)
+                else:
+                    expected_min += 1
+            assert len(project.fields) == expected_min
+
             # Variable names are valid (lowercase snake_case)
             for f in project.fields:
                 assert f.variable == f.variable.lower()

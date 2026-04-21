@@ -48,7 +48,26 @@ _QSF_OP_TO_RC_OP = {
     "GreaterThanOrEqual": ">=",
     "Selected": "=",
     "NotSelected": "<>",
+    # Presence operators — "this question was/wasn't displayed" maps to
+    # REDCap "the variable is/isn't blank".
+    "Displayed": "<>",
+    "NotDisplayed": "=",
+    "IsEmpty": "=",
+    "IsNotEmpty": "<>",
+    "Answered": "<>",
+    "NotAnswered": "=",
+    "Skipped": "=",
+    "NotSkipped": "<>",
 }
+
+
+# Operators whose semantic is "was a specific choice *displayed*" — we
+# translate by dropping the choice-specific part (REDCap can't distinguish
+# "choice k was displayed" from "the question was answered").
+_DISPLAY_SEMANTIC_OPS = frozenset({
+    "Displayed", "NotDisplayed", "IsEmpty", "IsNotEmpty",
+    "Answered", "NotAnswered", "Skipped", "NotSkipped",
+})
 
 
 def _flatten_or(node: rexpr.Node) -> list[rexpr.Node]:
@@ -253,6 +272,19 @@ def _expression_to_redcap(
             source_field_oid,
         )
         return None
+
+    # Display-semantic operators: REDCap can only express "was this question
+    # answered / is the variable blank". Degrade to a presence check and note
+    # the loss in the report.
+    if operator in _DISPLAY_SEMANTIC_OPS:
+        report.info(
+            "qsf:DisplayLogic", "redcap:branching",
+            f"Qualtrics {operator!r} has no exact REDCap equivalent — "
+            f"translated as a presence check on [{variable}] (loses "
+            "choice-specific semantic if present).",
+            source_field_oid,
+        )
+        return f"[{variable}] {rc_op} ''"
 
     choice_code = _extract_choice_code(choice_locator) or _extract_choice_code(left_operand)
     if choice_code is not None:

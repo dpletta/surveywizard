@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Matrix question expansion**: Qualtrics Matrix questions with N rows × M columns now expand into N REDCap fields sharing a matrix_group_name + shared codelist. Likert/SingleAnswer → radio, Likert/MultipleAnswer → checkbox, TE/Profile → text. The first row receives the original question text as its section header so the grouping is visible on import. Surfaced by team_skills.qsf (8 Matrix questions × 13 rows each = 104 new rows) and productivity_experiment.qsf (14 Matrix questions).
+- **Display-semantic operators** in the expression translator: Displayed, NotDisplayed, IsEmpty, IsNotEmpty, Answered, NotAnswered, Skipped, NotSkipped. Translated as REDCap presence checks ([var] = ''  / [var] <> '') with an INFO-level report entry explaining the loss of choice-specific semantic. Surfaced by productivity_experiment.qsf (18 previously-dropped NotDisplayed conditions now preserved).
+- SBS (side-by-side) questions now emit a dedicated WARNING instead of being conflated with generic matrix loss.
+
 ## [0.1.0] — 2026-04-21
 
 ### Added
