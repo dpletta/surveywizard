@@ -1,0 +1,147 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "surveywizard"
+version = "0.1.0"
+description = "Bidirectional CLI converter between REDCap XML and Qualtrics QSF survey files."
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.11"
+authors = [{ name = "David Pletta", email = "davidrpletta@gmail.com" }]
+keywords = ["redcap", "qualtrics", "qsf", "survey", "cdisc", "odm", "converter"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Healthcare Industry",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Medical Science Apps.",
+    "Topic :: Text Processing :: Markup :: XML",
+    "Topic :: Utilities",
+]
+dependencies = [
+    "typer>=0.15",
+    "lxml>=5.3",
+    "pydantic>=2.9",
+    "rich>=13.9",
+    "jsonschema>=4.23",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3",
+    "pytest-cov>=6.0",
+    "ruff>=0.8",
+    "mypy>=1.14",
+    "types-jsonschema>=4.23",
+    "lxml-stubs>=0.5",
+    "build>=1.2",
+    "twine>=6.0",
+]
+
+[project.scripts]
+surveywizard = "surveywizard.cli:app"
+
+[project.urls]
+Homepage = "https://github.com/dpletta/surveywizard"
+Repository = "https://github.com/dpletta/surveywizard"
+Issues = "https://github.com/dpletta/surveywizard/issues"
+Changelog = "https://github.com/dpletta/surveywizard/blob/main/CHANGELOG.md"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/surveywizard"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "src/surveywizard",
+    "tests",
+    "docs",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "pyproject.toml",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E", "F", "W",   # pycodestyle, pyflakes
+    "I",             # isort
+    "B",             # bugbear
+    "UP",            # pyupgrade
+    "N",             # pep8-naming
+    "SIM",           # simplify
+    "RUF",           # ruff-specific
+]
+ignore = [
+    "E501",   # line too long (handled by formatter)
+    "N802",   # function names (we follow QSF camelCase in some places)
+    "N815",   # mixedCase attributes (QSF compatibility)
+    "B008",   # Typer idiom: typer.Option(...) / typer.Argument(...) in defaults
+    "RUF012", # class-level constant sets/dicts are intentional in the parser
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["N802", "N803"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.mypy]
+python_version = "3.11"
+strict = false
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_return_any = false
+check_untyped_defs = true
+disallow_untyped_decorators = true
+show_error_codes = true
+namespace_packages = true
+explicit_package_bases = true
+mypy_path = "src"
+packages = ["surveywizard"]
+
+[[tool.mypy.overrides]]
+module = ["odmlib.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = [
+    "-ra",
+    "--strict-markers",
+    "--strict-config",
+    "--cov=surveywizard",
+    "--cov-report=term-missing",
+    "--cov-report=html:htmlcov",
+]
+markers = [
+    "unit: fast isolated unit tests",
+    "integration: converter integration tests",
+    "e2e: end-to-end CLI tests",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["src/surveywizard"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "raise NotImplementedError",
+    "if TYPE_CHECKING:",
+    "if __name__ == .__main__.:",
+]

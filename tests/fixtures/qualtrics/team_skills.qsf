@@ -1,0 +1,2047 @@
+{
+  "SurveyEntry": {
+    "SurveyID": "SV_cAOa80tDAZqCZEy",
+    "SurveyName": "GDD 450 Tetzlaff F2021, Team Skills - template",
+    "SurveyDescription": null,
+    "SurveyOwnerID": "UR_6o17r1BLuZ6W0st",
+    "SurveyBrandID": "uwstout",
+    "DivisionID": null,
+    "SurveyLanguage": "EN",
+    "SurveyActiveResponseSet": "RS_3auGAbnVIjWCsS2",
+    "SurveyStatus": "Inactive",
+    "SurveyStartDate": "0000-00-00 00:00:00",
+    "SurveyExpirationDate": "0000-00-00 00:00:00",
+    "SurveyCreationDate": "2022-01-31 11:10:47",
+    "CreatorID": "UR_6o17r1BLuZ6W0st",
+    "LastModified": "2022-02-10 10:23:54",
+    "LastAccessed": "0000-00-00 00:00:00",
+    "LastActivated": "0000-00-00 00:00:00",
+    "Deleted": null
+  },
+  "SurveyElements": [
+    {
+      "SurveyID": "SV_cAOa80tDAZqCZEy",
+      "Element": "BL",
+      "PrimaryAttribute": "Survey Blocks",
+      "SecondaryAttribute": null,
+      "TertiaryAttribute": null,
+      "Payload": [
+        {
+          "Type": "Default",
+          "Description": "Default Question Block",
+          "ID": "BL_bEIjXJs8pqbI0ex",
+          "BlockElements": [
+            {
+              "Type": "Question",
+              "QuestionID": "QID1"
+            },
+            {
+              "Type": "Question",
+              "QuestionID": "QID2"
+            },
+            {
+              "Type": "Question",
+              "QuestionID": "QID3"
+            },
+            {
+              "Type": "Page Break"
+            },
+            {
+              "Type": "Question",
+              "QuestionID": "QID4"
+            },
+            {
+              "Type": "Page Break"
+            },
+            {
+  "Type": "Question",
+  "QuestionID": "QID_Team1.5"
+}
+,
+{
+  "Type": "Question",
+  "QuestionID": "QID_Team2.5"
+}
+,
+            {
+              "Type": "Page Break"
+            },
+            {
+  "Type": "Question",
+  "QuestionID": "QID_Team1.2"
+}
+,
+{
+  "Type": "Question",
+  "QuestionID": "QID_Team2.2"
+}
+,
+            {
+              "Type": "Question",
+              "QuestionID": "QID5"
+            },
+            {
+              "Type": "Page Break"
+            },
+            {
+              "Type": "Question",
+              "QuestionID": "QID6"
+            },
+            {
+              "Type": "Page Break"
+            },
+			{
+  "Type": "Question",
+  "QuestionID": "QID_Team1.6"
+}
+,
+{
+  "Type": "Question",
+  "QuestionID": "QID_Team2.6"
+}
+,
+            {
+              "Type": "Page Break"
+            },
+            {
+              "Type": "Question",
+              "QuestionID": "QID7"
+            },
+            {
+              "Type": "Page Break"
+            },
+            {
+  "Type": "Question",
+  "QuestionID": "QID_Team1.1"
+}
+,
+{
+  "Type": "Question",
+  "QuestionID": "QID_Team2.1"
+}
+,
+            {
+              "Type": "Page Break"
+            },
+            {
+  "Type": "Question",
+  "QuestionID": "QID_Team1.3"
+}
+,
+{
+  "Type": "Question",
+  "QuestionID": "QID_Team2.3"
+}
+,
+            {
+  "Type": "Question",
+  "QuestionID": "QID_Team1.4"
+}
+,
+{
+  "Type": "Question",
+  "QuestionID": "QID_Team2.4"
+}
+,
+            {
+              "Type": "Page Break"
+            },
+            {
+              "Type": "Question",
+              "QuestionID": "QID8"
+            }
+          ],
+          "Options": {
+            "BlockLocking": "false",
+            "RandomizeQuestions": "false",
+            "BlockVisibility": "Expanded"
+          }
+        },
+        {
+          "Type": "Trash",
+          "Description": "Trash / Unused Questions",
+          "ID": "BL_6xpFcdruemioeXP",
+          "BlockElements": []
+        }
+      ]
+    },
+    {
+      "SurveyID": "SV_cAOa80tDAZqCZEy",
+      "Element": "FL",
+      "PrimaryAttribute": "Survey Flow",
+      "SecondaryAttribute": null,
+      "TertiaryAttribute": null,
+      "Payload": {
+        "Flow": [
+          {
+            "ID": "BL_bEIjXJs8pqbI0ex",
+            "Type": "Block",
+            "FlowID": "FL_2"
+          }
+        ],
+        "Properties": {
+          "Count": 4
+        },
+        "FlowID": "FL_1",
+        "Type": "Root"
+      }
+    },
+    {
+      "SurveyID": "SV_cAOa80tDAZqCZEy",
+      "Element": "RS",
+      "PrimaryAttribute": "RS_3auGAbnVIjWCsS2",
+      "SecondaryAttribute": null,
+      "TertiaryAttribute": null,
+      "Payload": null
+    },
+    {
+      "SurveyID": "SV_cAOa80tDAZqCZEy",
+      "Element": "SO",
+      "PrimaryAttribute": "Survey Options",
+      "SecondaryAttribute": null,
+      "TertiaryAttribute": null,
+      "Payload": {
+        "BackButton": "false",
+        "SaveAndContinue": "true",
+        "SurveyProtection": "PublicSurvey",
+        "BallotBoxStuffingPrevention": "false",
+        "NoIndex": "Yes",
+        "SecureResponseFiles": "true",
+        "SurveyExpiration": "None",
+        "SurveyTermination": "DefaultMessage",
+        "Header": "",
+        "Footer": "",
+        "ProgressBarDisplay": "None",
+        "PartialData": "+1 week",
+        "ValidationMessage": null,
+        "PreviousButton": " ← ",
+        "NextButton": " → ",
+        "SkinLibrary": "uwstout",
+        "SkinType": "MQ",
+        "Skin": "uwstout1_new",
+        "NewScoring": 1,
+        "ProtectSelectionIds": true,
+        "SurveyTitle": "Online Survey Software | Qualtrics Survey Solutions",
+        "SurveyName": "Team Skills Survey",
+        "EOSMessage": null,
+        "ShowExportTags": "false",
+        "CollectGeoLocation": "false",
+        "SurveyMetaDescription": "The most powerful, simple and trusted way to gather experience data. Start your journey to experience management and try a free account today.",
+        "PasswordProtection": "No",
+        "AnonymizeResponse": "No",
+        "RefererCheck": "No",
+        "UseCustomSurveyLinkCompletedMessage": null,
+        "SurveyLinkCompletedMessage": null,
+        "SurveyLinkCompletedMessageLibrary": null,
+        "ResponseSummary": "No",
+        "EOSMessageLibrary": null,
+        "EOSRedirectURL": null,
+        "EmailThankYou": "false",
+        "ThankYouEmailMessageLibrary": null,
+        "ThankYouEmailMessage": null,
+        "ValidateMessage": "false",
+        "ValidationMessageLibrary": null,
+        "InactiveSurvey": null,
+        "PartialDeletion": null,
+        "PartialDataCloseAfter": "LastActivity",
+        "InactiveMessageLibrary": null,
+        "InactiveMessage": null,
+        "AvailableLanguages": {
+          "EN": []
+        }
+      }
+    },
+    {
+      "SurveyID": "SV_0Q5rYaWzl4VIkia",
+      "Element": "SQ",
+      "PrimaryAttribute": "QID1",
+      "SecondaryAttribute": "What is your name?",
+      "TertiaryAttribute": null,
+      "Payload": {
+        "QuestionText": "What is your name?",
+        "DefaultChoices": false,
+        "DataExportTag": "Q1",
+        "QuestionID": "QID1",
+        "QuestionType": "TE",
+        "Selector": "SL",
+        "DataVisibility": {
+          "Private": false,
+          "Hidden": false
+        },
+        "Configuration": {
+          "QuestionDescriptionOption": "UseText"
+        },
+        "QuestionDescription": "What is your name?",
+        "Validation": {
+          "Settings": {
+            "ForceResponse": "OFF",
+            "Type": "None"
+          }
+        },
+        "GradingData": [],
+        "Language": [],
+        "NextChoiceId": 1,
+        "NextAnswerId": 1,
+        "SearchSource": {
+          "AllowFreeResponse": "false"
+        }
+      }
+    },
+    {
+      "SurveyID": "SV_cAOa80tDAZqCZEy",
+      "Element": "SQ",
+      "PrimaryAttribute": "QID2",
+      "SecondaryAttribute": "What team(s) have you been working with this sprint? You may choose more than one.",
+      "TertiaryAttribute": null,
+      "Payload": {
+        "QuestionText": "What team(s) have you been working with this sprint?&nbsp; You may choose more than one.",
+        "DataExportTag": "Q2",
+        "QuestionType": "MC",
+        "Selector": "MAVR",
+        "SubSelector": "TX",
+        "Configuration": {
+          "QuestionDescriptionOption": "UseText"
+        },
+        "QuestionDescription": "What team(s) have you been working with this sprint? You may choose more than one.",
+        "Validation": {
+          "Settings": {
+            "ForceResponse": "ON",
+            "ForceResponseType": "ON",
+            "Type": "None"
+          }
+        },
+        "Language": [],
+		"Choices" : { 
+"1": {
+"Display": "Newt!"
+},
+"2": {
+"Display": "Wobble Warriors"
+}
+},
+"ChoiceOrder" : [ 
+1,
+2
+],
+"NextChoiceId": 3,
+        "NextAnswerId": 1,
+        "QuestionID": "QID2",
+        "DataVisibility": {
+          "Private": false,
+          "Hidden": false
+        }
+      }
+    },
+    {
+      "SurveyID": "SV_cAOa80tDAZqCZEy",
+      "Element": "SQ",
+      "PrimaryAttribute": "QID3",
+      "SecondaryAttribute": "Are you primarily an artist or a programmer?",
+      "TertiaryAttribute": null,
+      "Payload": {
+        "QuestionText": "Are you primarily an artist or a programmer?",
+        "DataExportTag": "Q3",
+        "QuestionType": "MC",
+        "Selector": "SAVR",
+        "SubSelector": "TX",
+        "Configuration": {
+          "QuestionDescriptionOption": "UseText"
+        },
+        "QuestionDescription": "Are you primarily an artist or a programmer?",
+        "Choices": {
+          "1": {
+            "Display": "Artist"
+          },
+          "2": {
+            "Display": "Programmer"
+          }
+        },
+        "ChoiceOrder": [
+          1,
+          2
+        ],
+        "Validation": {
+          "Settings": {
+            "ForceResponse": "ON",
+            "ForceResponseType": "ON",
+            "Type": "None"
+          }
+        },
+        "Language": [],
+        "NextChoiceId": 3,
+        "NextAnswerId": 1,
+        "QuestionID": "QID3",
+        "DataVisibility": {
+          "Private": false,
+          "Hidden": false
+        }
+      }
+    },
+    {
+      "SurveyID": "SV_cAOa80tDAZqCZEy",
+      "Element": "SQ",
+      "PrimaryAttribute": "QID4",
+      "SecondaryAttribute": "Have any of your teammates ever been unreliable in completing their work as assigned?",
+      "TertiaryAttribute": null,
+      "Payload": {
+        "QuestionText": "Have any of your teammates ever been unreliable in completing their work as assigned?",
+        "DataExportTag": "Q4",
+        "QuestionType": "MC",
+        "Selector": "SAVR",
+        "SubSelector": "TX",
+        "Configuration": {
+          "QuestionDescriptionOption": "UseText"
+        },
+        "QuestionDescription": "Have any of your teammates ever been unreliable in completing their work as assigned?",
+        "Choices": {
+          "1": {
+            "Display": "Yes"
+          },
+          "2": {
+            "Display": "No, everyone on the team always does their work reliably."
+          }
+        },
+        "ChoiceOrder": [
+          "1",
+          "2"
+        ],
+        "Validation": {
+          "Settings": {
+            "ForceResponse": "ON",
+            "ForceResponseType": "ON",
+            "Type": "None"
+          }
+        },
+        "Language": [],
+        "NextChoiceId": 3,
+        "NextAnswerId": 1,
+        "QuestionID": "QID4",
+        "DataVisibility": {
+          "Private": false,
+          "Hidden": false
+        }
+      }
+    },
+    {
+      "SurveyID": "SV_cAOa80tDAZqCZEy",
+      "Element": "SQ",
+      "PrimaryAttribute": "QID5",
+      "SecondaryAttribute": "Give an example for each teammate that you selected in the previous question. (Who did they assis...",
+      "TertiaryAttribute": null,
+      "Payload": {
+        "QuestionText": "Give an example for each teammate that you selected in the previous question.&nbsp; (Who did they assist, what did they assist with, etc.)",
+        "DefaultChoices": false,
+        "DataExportTag": "Q5",
+        "QuestionType": "TE",
+        "Selector": "ML",
+        "Configuration": {
+          "QuestionDescriptionOption": "UseText"
+        },
+        "QuestionDescription": "Give an example for each teammate that you selected in the previous question. (Who did they assis...",
+        "Validation": {
+          "Settings": {
+            "ForceResponse": "OFF",
+            "ForceResponseType": "ON",
+            "Type": "None"
+          }
+        },
+        "GradingData": [],
+        "Language": [],
+        "NextChoiceId": 4,
+        "NextAnswerId": 1,
+        "SearchSource": {
+          "AllowFreeResponse": "false"
+        },
+        "QuestionID": "QID5",
+        "DataVisibility": {
+          "Private": false,
+          "Hidden": false
+        }
+      }
+    },
+    {
+      "SurveyID": "SV_cAOa80tDAZqCZEy",
+      "Element": "SQ",
+      "PrimaryAttribute": "QID6",
+      "SecondaryAttribute": "Have any of your teammates ever needed reminders to do their assigned work?",
+      "TertiaryAttribute": null,
+      "Payload": {
+        "QuestionText": "Have any of your teammates ever needed reminders to do their assigned work?",
+        "DataExportTag": "Q6",
+        "QuestionType": "MC",
+        "Selector": "SAVR",
+        "SubSelector": "TX",
+        "DataVisibility": {
+          "Private": false,
+          "Hidden": false
+        },
+        "Configuration": {
+          "QuestionDescriptionOption": "UseText"
+        },
+        "QuestionDescription": "Have any of your teammates ever needed reminders to do their assigned work?",
+        "Choices": {
+          "1": {
+            "Display": "Yes"
+          },
+          "2": {
+            "Display": "No, everyone on the team always does their work without needing reminders."
+          }
+        },
+        "ChoiceOrder": [
+          "1",
+          "2"
+        ],
+        "Validation": {
+          "Settings": {
+            "ForceResponse": "ON",
+            "ForceResponseType": "ON",
+            "Type": "None"
+          }
+        },
+        "Language": [],
+        "NextChoiceId": 3,
+        "NextAnswerId": 1,
+        "QuestionID": "QID6"
+      }
+    },
+    {
+      "SurveyID": "SV_cAOa80tDAZqCZEy",
+      "Element": "SQ",
+      "PrimaryAttribute": "QID7",
+      "SecondaryAttribute": "Have any of your teammates needed an unreasonable amount of assistance to complete their assigned...",
+      "TertiaryAttribute": null,
+      "Payload": {
+        "QuestionText": "Have any of your teammates needed an unreasonable amount of assistance to complete their assigned work?",
+        "DataExportTag": "Q7",
+        "QuestionType": "MC",
+        "Selector": "SAVR",
+        "SubSelector": "TX",
+        "DataVisibility": {
+          "Private": false,
+          "Hidden": false
+        },
+        "Configuration": {
+          "QuestionDescriptionOption": "UseText"
+        },
+        "QuestionDescription": "Have any of your teammates needed an unreasonable amount of assistance to complete their assigned...",
+        "Choices": {
+          "1": {
+            "Display": "Yes"
+          },
+          "2": {
+            "Display": "No, each member of the team rarely needs assistance."
+          }
+        },
+        "ChoiceOrder": [
+          "1",
+          "2"
+        ],
+        "Validation": {
+          "Settings": {
+            "ForceResponse": "ON",
+            "ForceResponseType": "ON",
+            "Type": "None"
+          }
+        },
+        "Language": [],
+        "NextChoiceId": 3,
+        "NextAnswerId": 1,
+        "QuestionID": "QID7"
+      }
+    },
+	{
+      "SurveyID": "SV_cAOa80tDAZqCZEy",
+      "Element": "SQ",
+      "PrimaryAttribute": "QID8",
+      "SecondaryAttribute": "Feel free to provide detailed comments regarding your teammates or clarify any of your answers to...",
+      "TertiaryAttribute": null,
+      "Payload": {
+        "QuestionText": "Feel free to provide detailed comments regarding your teammates or clarify any of your answers to the above questions.&nbsp; (This is optional.)",
+        "DefaultChoices": false,
+        "DataExportTag": "Q8",
+        "QuestionType": "TE",
+        "Selector": "ESTB",
+        "Configuration": {
+          "QuestionDescriptionOption": "UseText",
+          "InputWidth": 680,
+          "InputHeight": 101
+        },
+        "QuestionDescription": "Feel free to provide detailed comments regarding your teammates or clarify any of your answers to...",
+        "Validation": {
+          "Settings": {
+            "ForceResponse": "OFF",
+            "Type": "None"
+          }
+        },
+        "GradingData": [],
+        "Language": [],
+        "NextChoiceId": 1,
+        "NextAnswerId": 1,
+        "SearchSource": {
+          "AllowFreeResponse": "false"
+        },
+        "QuestionID": "QID8"
+      }
+    },
+	{
+  "SurveyID": "SV_cAOa80tDAZqCZEy",
+  "Element": "SQ",
+  "PrimaryAttribute": "QID_Team1.5",
+  "SecondaryAttribute": "Rate each member of your team on how reliably he or she does the work that has been assigned. In...",
+  "TertiaryAttribute": null,
+  "Payload": {
+	"QuestionText": "Rate each member of your team on how reliably he or she does the work that has been assigned.&nbsp; In addition to rating your teammates, you should also assess yourself where you see your own name.&nbsp; You do not need to rate any individual on this list who either didn't have responsibilities on your team for this sprint, or whom you didn't work closely enough with to be able to assess their contributions.",
+	"DefaultChoices": false,
+	"DataExportTag": "Reliability/Newt!",
+	"QuestionType": "Matrix",
+	"Selector": "Likert",
+	"SubSelector": "SingleAnswer",
+	"DataVisibility": {
+	  "Private": false,
+	  "Hidden": false
+	},
+	"Configuration": {
+	  "QuestionDescriptionOption": "UseText",
+	  "TextPosition": "inline",
+	  "ChoiceColumnWidth": 25,
+	  "RepeatHeaders": "none",
+	  "WhiteSpace": "OFF",
+	  "MobileFirst": true
+	},
+	"QuestionDescription": "Rate each member of your team on how reliably he or she does the work that has been assigned. In...",
+	"DisplayLogic": {
+	  "0": {
+		"0": {
+		  "ChoiceLocator": "q://QID2/SelectableChoice/1",
+		  "Description": "<span class=\"ConjDesc\">If</span> <span class=\"QuestionDesc\">What team(s) have you been working with this sprint? You may choose more than one.</span> <span class=\"LeftOpDesc\">Newt!</span> <span class=\"OpDesc\">Is Selected</span> ",
+		  "LeftOperand": "q://QID2/SelectableChoice/1",
+		  "LogicType": "Question",
+		  "Operator": "Selected",
+		  "QuestionID": "QID2",
+		  "QuestionIDFromLocator": "QID2",
+		  "QuestionIsInLoop": "no",
+		  "Type": "Expression"
+		},
+		"1": {
+		  "ChoiceLocator": "q://QID4/SelectableChoice/1",
+		  "Conjuction": "And",
+		  "Description": "<span class=\"ConjDesc\">And</span> <span class=\"QuestionDesc\">Have any of your teammates ever been unreliable in completing their work as assigned?</span> <span class=\"LeftOpDesc\">Yes</span> <span class=\"OpDesc\">Is Selected</span> ",
+		  "LeftOperand": "q://QID4/SelectableChoice/1",
+		  "LogicType": "Question",
+		  "Operator": "Selected",
+		  "QuestionID": "QID4",
+		  "QuestionIDFromLocator": "QID4",
+		  "QuestionIsInLoop": "no",
+		  "Type": "Expression"
+		},
+		"Type": "If"
+	  },
+	  "Type": "BooleanExpression",
+	  "inPage": false
+	},
+	"Validation": {
+	  "Settings": {
+		"ForceResponse": "OFF",
+		"ForceResponseType": "ON",
+		"Type": "None"
+	  }
+	},
+	"GradingData": [],
+	"Language": [],
+	"Choices": {
+  "1": {
+	"Display": "Anna Thiele"
+  },
+  "2": {
+	"Display": "Emyee Fox"
+  },
+  "3": {
+	"Display": "Harrison Kelly"
+  },
+  "4": {
+	"Display": "Jon Gilleland"
+  },
+  "5": {
+	"Display": "Kali Gardner"
+  },
+  "6": {
+	"Display": "Katie Monte"
+  },
+  "7": {
+	"Display": "William Hollinger"
+  },
+  "8": {
+	"Display": "Anton Nikitin"
+  },
+  "9": {
+	"Display": "Bryce Cernohous-Schrader"
+  },
+  "10": {
+	"Display": "Reece Nadle"
+  },
+  "11": {
+	"Display": "Rodger Lugo Cruz"
+  },
+  "12": {
+	"Display": "Tyler Garcia"
+  },
+  "13": {
+	"Display": "Yair Macagon"
+  }
+},
+"ChoiceOrder": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13
+],
+"NextChoiceId": 14
+,
+	"Answers": {
+	  "1": {
+		"Display": "Never does the assigned work"
+	  },
+	  "2": {
+		"Display": "Rarely does the assigned work"
+	  },
+	  "3": {
+		"Display": "Usually does the assigned work"
+	  },
+	  "4": {
+		"Display": "Always does the assigned work"
+	  }
+	},
+	"AnswerOrder": [
+	  1,
+	  2,
+	  3,
+	  4
+	],
+	"NextAnswerId": 5,
+	"ChoiceDataExportTags": false,
+	"QuestionID": "QID_Team1.5"
+  }
+}
+,
+{
+  "SurveyID": "SV_cAOa80tDAZqCZEy",
+  "Element": "SQ",
+  "PrimaryAttribute": "QID_Team2.5",
+  "SecondaryAttribute": "Rate each member of your team on how reliably he or she does the work that has been assigned. In...",
+  "TertiaryAttribute": null,
+  "Payload": {
+	"QuestionText": "Rate each member of your team on how reliably he or she does the work that has been assigned.&nbsp; In addition to rating your teammates, you should also assess yourself where you see your own name.&nbsp; You do not need to rate any individual on this list who either didn't have responsibilities on your team for this sprint, or whom you didn't work closely enough with to be able to assess their contributions.",
+	"DefaultChoices": false,
+	"DataExportTag": "Reliability/Wobble Warriors",
+	"QuestionType": "Matrix",
+	"Selector": "Likert",
+	"SubSelector": "SingleAnswer",
+	"DataVisibility": {
+	  "Private": false,
+	  "Hidden": false
+	},
+	"Configuration": {
+	  "QuestionDescriptionOption": "UseText",
+	  "TextPosition": "inline",
+	  "ChoiceColumnWidth": 25,
+	  "RepeatHeaders": "none",
+	  "WhiteSpace": "OFF",
+	  "MobileFirst": true
+	},
+	"QuestionDescription": "Rate each member of your team on how reliably he or she does the work that has been assigned. In...",
+	"DisplayLogic": {
+	  "0": {
+		"0": {
+		  "ChoiceLocator": "q://QID2/SelectableChoice/2",
+		  "Description": "<span class=\"ConjDesc\">If</span> <span class=\"QuestionDesc\">What team(s) have you been working with this sprint? You may choose more than one.</span> <span class=\"LeftOpDesc\">Wobble Warriors</span> <span class=\"OpDesc\">Is Selected</span> ",
+		  "LeftOperand": "q://QID2/SelectableChoice/2",
+		  "LogicType": "Question",
+		  "Operator": "Selected",
+		  "QuestionID": "QID2",
+		  "QuestionIDFromLocator": "QID2",
+		  "QuestionIsInLoop": "no",
+		  "Type": "Expression"
+		},
+		"1": {
+		  "ChoiceLocator": "q://QID4/SelectableChoice/1",
+		  "Conjuction": "And",
+		  "Description": "<span class=\"ConjDesc\">And</span> <span class=\"QuestionDesc\">Have any of your teammates ever been unreliable in completing their work as assigned?</span> <span class=\"LeftOpDesc\">Yes</span> <span class=\"OpDesc\">Is Selected</span> ",
+		  "LeftOperand": "q://QID4/SelectableChoice/1",
+		  "LogicType": "Question",
+		  "Operator": "Selected",
+		  "QuestionID": "QID4",
+		  "QuestionIDFromLocator": "QID4",
+		  "QuestionIsInLoop": "no",
+		  "Type": "Expression"
+		},
+		"Type": "If"
+	  },
+	  "Type": "BooleanExpression",
+	  "inPage": false
+	},
+	"Validation": {
+	  "Settings": {
+		"ForceResponse": "OFF",
+		"ForceResponseType": "ON",
+		"Type": "None"
+	  }
+	},
+	"GradingData": [],
+	"Language": [],
+	"Choices": {
+  "1": {
+	"Display": "Anna Thiele"
+  },
+  "2": {
+	"Display": "Katie Monte"
+  },
+  "3": {
+	"Display": "Brian Bauch"
+  },
+  "4": {
+	"Display": "Bryce Niles"
+  },
+  "5": {
+	"Display": "Jaden Schneider"
+  },
+  "6": {
+	"Display": "Olivia LaValley"
+  },
+  "7": {
+	"Display": "Trent LeClair"
+  }
+},
+"ChoiceOrder": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7
+],
+"NextChoiceId": 8
+,
+	"Answers": {
+	  "1": {
+		"Display": "Never does the assigned work"
+	  },
+	  "2": {
+		"Display": "Rarely does the assigned work"
+	  },
+	  "3": {
+		"Display": "Usually does the assigned work"
+	  },
+	  "4": {
+		"Display": "Always does the assigned work"
+	  }
+	},
+	"AnswerOrder": [
+	  1,
+	  2,
+	  3,
+	  4
+	],
+	"NextAnswerId": 5,
+	"ChoiceDataExportTags": false,
+	"QuestionID": "QID_Team2.5"
+  }
+}
+,
+	{
+  "SurveyID": "SV_cAOa80tDAZqCZEy",
+  "Element": "SQ",
+  "PrimaryAttribute": "QID_Team1.2",
+  "SecondaryAttribute": "Which teammates, if any, have you most often observed actively assisting you or others? (Choose n...",
+  "TertiaryAttribute": null,
+  "Payload": {
+	"QuestionText": "Which teammates, if any, have you most often observed actively assisting you or others?&nbsp; (Choose no more than two.)",
+	"DefaultChoices": false,
+	"DataExportTag": "AssistOthers/Newt!",
+	"QuestionType": "MC",
+	"Selector": "MAVR",
+	"SubSelector": "TX",
+	"Configuration": {
+	  "QuestionDescriptionOption": "UseText"
+	},
+	"QuestionDescription": "Which teammates, if any, have you most often observed actively assisting you or others? (Choose n...",
+	"DisplayLogic": {
+	  "0": {
+		"0": {
+		  "ChoiceLocator": "q://QID2/SelectableChoice/1",
+		  "Description": "<span class=\"ConjDesc\">If</span> <span class=\"QuestionDesc\">What team(s) have you been working with this sprint? You may choose more than one.</span> <span class=\"LeftOpDesc\">Newt!</span> <span class=\"OpDesc\">Is Selected</span> ",
+		  "LeftOperand": "q://QID2/SelectableChoice/1",
+		  "LogicType": "Question",
+		  "Operator": "Selected",
+		  "QuestionID": "QID2",
+		  "QuestionIDFromLocator": "QID2",
+		  "QuestionIsInLoop": "no",
+		  "Type": "Expression"
+		},
+		"Type": "If"
+	  },
+	  "Type": "BooleanExpression",
+	  "inPage": false
+	},
+	"Choices": {
+  "1": {
+	"Display": "Anna Thiele"
+  },
+  "2": {
+	"Display": "Emyee Fox"
+  },
+  "3": {
+	"Display": "Harrison Kelly"
+  },
+  "4": {
+	"Display": "Jon Gilleland"
+  },
+  "5": {
+	"Display": "Kali Gardner"
+  },
+  "6": {
+	"Display": "Katie Monte"
+  },
+  "7": {
+	"Display": "William Hollinger"
+  },
+  "8": {
+	"Display": "Anton Nikitin"
+  },
+  "9": {
+	"Display": "Bryce Cernohous-Schrader"
+  },
+  "10": {
+	"Display": "Reece Nadle"
+  },
+  "11": {
+	"Display": "Rodger Lugo Cruz"
+  },
+  "12": {
+	"Display": "Tyler Garcia"
+  },
+  "13": {
+	"Display": "Yair Macagon"
+  }
+},
+"ChoiceOrder": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13
+],
+"NextChoiceId": 14
+,
+	"Validation": {
+	  "Settings": {
+		"ForceResponse": "OFF",
+		"ForceResponseType": "ON",
+		"Type": "ChoiceRange",
+		"MinChoices": "0",
+		"MaxChoices": "2"
+	  }
+	},
+	"NextAnswerId": 3,
+	"GradingData": [],
+	"Language": [],
+	"QuestionID": "QID_Team1.2",
+	"DataVisibility": {
+	  "Private": false,
+	  "Hidden": false
+	}
+  }
+}
+,
+{
+  "SurveyID": "SV_cAOa80tDAZqCZEy",
+  "Element": "SQ",
+  "PrimaryAttribute": "QID_Team2.2",
+  "SecondaryAttribute": "Which teammates, if any, have you most often observed actively assisting you or others? (Choose n...",
+  "TertiaryAttribute": null,
+  "Payload": {
+	"QuestionText": "Which teammates, if any, have you most often observed actively assisting you or others?&nbsp; (Choose no more than two.)",
+	"DefaultChoices": false,
+	"DataExportTag": "AssistOthers/Wobble Warriors",
+	"QuestionType": "MC",
+	"Selector": "MAVR",
+	"SubSelector": "TX",
+	"Configuration": {
+	  "QuestionDescriptionOption": "UseText"
+	},
+	"QuestionDescription": "Which teammates, if any, have you most often observed actively assisting you or others? (Choose n...",
+	"DisplayLogic": {
+	  "0": {
+		"0": {
+		  "ChoiceLocator": "q://QID2/SelectableChoice/2",
+		  "Description": "<span class=\"ConjDesc\">If</span> <span class=\"QuestionDesc\">What team(s) have you been working with this sprint? You may choose more than one.</span> <span class=\"LeftOpDesc\">Wobble Warriors</span> <span class=\"OpDesc\">Is Selected</span> ",
+		  "LeftOperand": "q://QID2/SelectableChoice/2",
+		  "LogicType": "Question",
+		  "Operator": "Selected",
+		  "QuestionID": "QID2",
+		  "QuestionIDFromLocator": "QID2",
+		  "QuestionIsInLoop": "no",
+		  "Type": "Expression"
+		},
+		"Type": "If"
+	  },
+	  "Type": "BooleanExpression",
+	  "inPage": false
+	},
+	"Choices": {
+  "1": {
+	"Display": "Anna Thiele"
+  },
+  "2": {
+	"Display": "Katie Monte"
+  },
+  "3": {
+	"Display": "Brian Bauch"
+  },
+  "4": {
+	"Display": "Bryce Niles"
+  },
+  "5": {
+	"Display": "Jaden Schneider"
+  },
+  "6": {
+	"Display": "Olivia LaValley"
+  },
+  "7": {
+	"Display": "Trent LeClair"
+  }
+},
+"ChoiceOrder": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7
+],
+"NextChoiceId": 8
+,
+	"Validation": {
+	  "Settings": {
+		"ForceResponse": "OFF",
+		"ForceResponseType": "ON",
+		"Type": "ChoiceRange",
+		"MinChoices": "0",
+		"MaxChoices": "2"
+	  }
+	},
+	"NextAnswerId": 3,
+	"GradingData": [],
+	"Language": [],
+	"QuestionID": "QID_Team2.2",
+	"DataVisibility": {
+	  "Private": false,
+	  "Hidden": false
+	}
+  }
+}
+,
+	{
+  "SurveyID": "SV_cAOa80tDAZqCZEy",
+  "Element": "SQ",
+  "PrimaryAttribute": "QID_Team1.6",
+  "SecondaryAttribute": "Rate each member of your team on how often you or another teammate have needed to remind them to...",
+  "TertiaryAttribute": null,
+  "Payload": {
+	"QuestionText": "Rate each member of your team on how often you or another teammate have needed to remind them to do the work that has been assigned.  In addition to rating your teammates, you should also assess yourself where you see your own name.&nbsp; You do not need to rate any individual on this list who either didn't have responsibilities on your team for this sprint, or whom you didn't work closely enough with to be able to assess their contributions.",
+	"DefaultChoices": false,
+	"DataExportTag": "Reminders/Newt!",
+	"QuestionType": "Matrix",
+	"Selector": "Likert",
+	"SubSelector": "SingleAnswer",
+	"DataVisibility": {
+	  "Private": false,
+	  "Hidden": false
+	},
+	"Configuration": {
+	  "QuestionDescriptionOption": "UseText",
+	  "TextPosition": "inline",
+	  "ChoiceColumnWidth": 25,
+	  "RepeatHeaders": "none",
+	  "WhiteSpace": "OFF",
+	  "MobileFirst": true
+	},
+	"QuestionDescription": "Rate each member of your team on how often you or another teammate have needed to remind them to...",
+	"DisplayLogic": {
+	  "0": {
+		"0": {
+		  "ChoiceLocator": "q://QID2/SelectableChoice/1",
+		  "Description": "<span class=\"ConjDesc\">If</span> <span class=\"QuestionDesc\">What team(s) have you been working with this sprint? You may choose more than one.</span> <span class=\"LeftOpDesc\">Newt!</span> <span class=\"OpDesc\">Is Selected</span> ",
+		  "LeftOperand": "q://QID2/SelectableChoice/1",
+		  "LogicType": "Question",
+		  "Operator": "Selected",
+		  "QuestionID": "QID2",
+		  "QuestionIDFromLocator": "QID2",
+		  "QuestionIsInLoop": "no",
+		  "Type": "Expression"
+		},
+		"1": {
+		  "ChoiceLocator": "q://QID6/SelectableChoice/1",
+		  "Conjuction": "And",
+		  "Description": "<span class=\"ConjDesc\">And</span> <span class=\"QuestionDesc\">Have any of your teammates ever needed reminders to do their assigned work?</span> <span class=\"LeftOpDesc\">Yes</span> <span class=\"OpDesc\">Is Selected</span> ",
+		  "LeftOperand": "q://QID6/SelectableChoice/1",
+		  "LogicType": "Question",
+		  "Operator": "Selected",
+		  "QuestionID": "QID6",
+		  "QuestionIDFromLocator": "QID6",
+		  "QuestionIsInLoop": "no",
+		  "Type": "Expression"
+		},
+		"Type": "If"
+	  },
+	  "Type": "BooleanExpression",
+	  "inPage": false
+	},
+	"Choices": {
+  "1": {
+	"Display": "Anna Thiele"
+  },
+  "2": {
+	"Display": "Emyee Fox"
+  },
+  "3": {
+	"Display": "Harrison Kelly"
+  },
+  "4": {
+	"Display": "Jon Gilleland"
+  },
+  "5": {
+	"Display": "Kali Gardner"
+  },
+  "6": {
+	"Display": "Katie Monte"
+  },
+  "7": {
+	"Display": "William Hollinger"
+  },
+  "8": {
+	"Display": "Anton Nikitin"
+  },
+  "9": {
+	"Display": "Bryce Cernohous-Schrader"
+  },
+  "10": {
+	"Display": "Reece Nadle"
+  },
+  "11": {
+	"Display": "Rodger Lugo Cruz"
+  },
+  "12": {
+	"Display": "Tyler Garcia"
+  },
+  "13": {
+	"Display": "Yair Macagon"
+  }
+},
+"ChoiceOrder": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13
+],
+"NextChoiceId": 14
+,
+	"Validation": {
+	  "Settings": {
+		"ForceResponse": "OFF",
+		"ForceResponseType": "ON",
+		"Type": "None"
+	  }
+	},
+	"GradingData": [],
+	"Language": [],
+	"Answers": {
+	  "1": {
+		"Display": "Always needs reminding"
+	  },
+	  "2": {
+		"Display": "Usually needs reminding"
+	  },
+	  "3": {
+		"Display": "Rarely needs reminding"
+	  },
+	  "4": {
+		"Display": "Never needs reminding"
+	  }
+	},
+	"AnswerOrder": [
+	  1,
+	  2,
+	  3,
+	  4
+	],
+	"NextAnswerId": 5,
+	"ChoiceDataExportTags": false,
+	"QuestionID": "QID_Team1.6"
+  }
+}
+,
+{
+  "SurveyID": "SV_cAOa80tDAZqCZEy",
+  "Element": "SQ",
+  "PrimaryAttribute": "QID_Team2.6",
+  "SecondaryAttribute": "Rate each member of your team on how often you or another teammate have needed to remind them to...",
+  "TertiaryAttribute": null,
+  "Payload": {
+	"QuestionText": "Rate each member of your team on how often you or another teammate have needed to remind them to do the work that has been assigned.  In addition to rating your teammates, you should also assess yourself where you see your own name.&nbsp; You do not need to rate any individual on this list who either didn't have responsibilities on your team for this sprint, or whom you didn't work closely enough with to be able to assess their contributions.",
+	"DefaultChoices": false,
+	"DataExportTag": "Reminders/Wobble Warriors",
+	"QuestionType": "Matrix",
+	"Selector": "Likert",
+	"SubSelector": "SingleAnswer",
+	"DataVisibility": {
+	  "Private": false,
+	  "Hidden": false
+	},
+	"Configuration": {
+	  "QuestionDescriptionOption": "UseText",
+	  "TextPosition": "inline",
+	  "ChoiceColumnWidth": 25,
+	  "RepeatHeaders": "none",
+	  "WhiteSpace": "OFF",
+	  "MobileFirst": true
+	},
+	"QuestionDescription": "Rate each member of your team on how often you or another teammate have needed to remind them to...",
+	"DisplayLogic": {
+	  "0": {
+		"0": {
+		  "ChoiceLocator": "q://QID2/SelectableChoice/2",
+		  "Description": "<span class=\"ConjDesc\">If</span> <span class=\"QuestionDesc\">What team(s) have you been working with this sprint? You may choose more than one.</span> <span class=\"LeftOpDesc\">Wobble Warriors</span> <span class=\"OpDesc\">Is Selected</span> ",
+		  "LeftOperand": "q://QID2/SelectableChoice/2",
+		  "LogicType": "Question",
+		  "Operator": "Selected",
+		  "QuestionID": "QID2",
+		  "QuestionIDFromLocator": "QID2",
+		  "QuestionIsInLoop": "no",
+		  "Type": "Expression"
+		},
+		"1": {
+		  "ChoiceLocator": "q://QID6/SelectableChoice/1",
+		  "Conjuction": "And",
+		  "Description": "<span class=\"ConjDesc\">And</span> <span class=\"QuestionDesc\">Have any of your teammates ever needed reminders to do their assigned work?</span> <span class=\"LeftOpDesc\">Yes</span> <span class=\"OpDesc\">Is Selected</span> ",
+		  "LeftOperand": "q://QID6/SelectableChoice/1",
+		  "LogicType": "Question",
+		  "Operator": "Selected",
+		  "QuestionID": "QID6",
+		  "QuestionIDFromLocator": "QID6",
+		  "QuestionIsInLoop": "no",
+		  "Type": "Expression"
+		},
+		"Type": "If"
+	  },
+	  "Type": "BooleanExpression",
+	  "inPage": false
+	},
+	"Choices": {
+  "1": {
+	"Display": "Anna Thiele"
+  },
+  "2": {
+	"Display": "Katie Monte"
+  },
+  "3": {
+	"Display": "Brian Bauch"
+  },
+  "4": {
+	"Display": "Bryce Niles"
+  },
+  "5": {
+	"Display": "Jaden Schneider"
+  },
+  "6": {
+	"Display": "Olivia LaValley"
+  },
+  "7": {
+	"Display": "Trent LeClair"
+  }
+},
+"ChoiceOrder": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7
+],
+"NextChoiceId": 8
+,
+	"Validation": {
+	  "Settings": {
+		"ForceResponse": "OFF",
+		"ForceResponseType": "ON",
+		"Type": "None"
+	  }
+	},
+	"GradingData": [],
+	"Language": [],
+	"Answers": {
+	  "1": {
+		"Display": "Always needs reminding"
+	  },
+	  "2": {
+		"Display": "Usually needs reminding"
+	  },
+	  "3": {
+		"Display": "Rarely needs reminding"
+	  },
+	  "4": {
+		"Display": "Never needs reminding"
+	  }
+	},
+	"AnswerOrder": [
+	  1,
+	  2,
+	  3,
+	  4
+	],
+	"NextAnswerId": 5,
+	"ChoiceDataExportTags": false,
+	"QuestionID": "QID_Team2.6"
+  }
+}
+,
+	{
+  "SurveyID": "SV_cAOa80tDAZqCZEy",
+  "Element": "SQ",
+  "PrimaryAttribute": "QID_Team1.1",
+  "SecondaryAttribute": "Rate each member of your team on the degree to which he or she has needed your assistance or the...",
+  "TertiaryAttribute": null,
+  "Payload": {
+	"QuestionText": "Rate each member of your team on the degree to which he or she has needed your assistance or the assistance of others to complete assigned work.  In addition to rating your teammates, you should also assess yourself where you see your own name. You do not need to rate any individual on this list who either didn't have responsibilities on your team for this sprint, or whom you didn't work closely enough with to be able to assess their contributions.",
+	"DefaultChoices": false,
+	"DataExportTag": "Assistance/Newt!",
+	"QuestionType": "Matrix",
+	"Selector": "Likert",
+	"SubSelector": "SingleAnswer",
+	"DataVisibility": {
+	  "Private": false,
+	  "Hidden": false
+	},
+	"Configuration": {
+	  "QuestionDescriptionOption": "UseText",
+	  "TextPosition": "inline",
+	  "ChoiceColumnWidth": 25,
+	  "RepeatHeaders": "none",
+	  "WhiteSpace": "OFF",
+	  "MobileFirst": true
+	},
+	"QuestionDescription": "Rate each member of your team on the degree to which he or she has needed your assistance or the...",
+	"DisplayLogic": {
+	  "0": {
+		"0": {
+		  "ChoiceLocator": "q://QID2/SelectableChoice/1",
+		  "Description": "<span class=\"ConjDesc\">If</span> <span class=\"QuestionDesc\">What team(s) have you been working with this sprint? You may choose more than one.</span> <span class=\"LeftOpDesc\">Newt!</span> <span class=\"OpDesc\">Is Selected</span> ",
+		  "LeftOperand": "q://QID2/SelectableChoice/1",
+		  "LogicType": "Question",
+		  "Operator": "Selected",
+		  "QuestionID": "QID2",
+		  "QuestionIDFromLocator": "QID2",
+		  "QuestionIsInLoop": "no",
+		  "Type": "Expression"
+		},
+		"1": {
+		  "ChoiceLocator": "q://QID7/SelectableChoice/1",
+		  "Conjuction": "And",
+		  "Description": "<span class=\"ConjDesc\">And</span> <span class=\"QuestionDesc\">Have any of your teammates needed an unreasonable amount of assistance to complete their assigned...</span> <span class=\"LeftOpDesc\">Yes</span> <span class=\"OpDesc\">Is Selected</span> ",
+		  "LeftOperand": "q://QID7/SelectableChoice/1",
+		  "LogicType": "Question",
+		  "Operator": "Selected",
+		  "QuestionID": "QID7",
+		  "QuestionIDFromLocator": "QID7",
+		  "QuestionIsInLoop": "no",
+		  "Type": "Expression"
+		},
+		"Type": "If"
+	  },
+	  "Type": "BooleanExpression",
+	  "inPage": false
+	},
+	"Choices": {
+  "1": {
+	"Display": "Anna Thiele"
+  },
+  "2": {
+	"Display": "Emyee Fox"
+  },
+  "3": {
+	"Display": "Harrison Kelly"
+  },
+  "4": {
+	"Display": "Jon Gilleland"
+  },
+  "5": {
+	"Display": "Kali Gardner"
+  },
+  "6": {
+	"Display": "Katie Monte"
+  },
+  "7": {
+	"Display": "William Hollinger"
+  },
+  "8": {
+	"Display": "Anton Nikitin"
+  },
+  "9": {
+	"Display": "Bryce Cernohous-Schrader"
+  },
+  "10": {
+	"Display": "Reece Nadle"
+  },
+  "11": {
+	"Display": "Rodger Lugo Cruz"
+  },
+  "12": {
+	"Display": "Tyler Garcia"
+  },
+  "13": {
+	"Display": "Yair Macagon"
+  }
+},
+"ChoiceOrder": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13
+],
+"NextChoiceId": 14
+,
+	"Validation": {
+	  "Settings": {
+		"ForceResponse": "OFF",
+		"ForceResponseType": "ON",
+		"Type": "None"
+	  }
+	},
+	"GradingData": [],
+	"Language": [],
+	"Answers": {
+	  "1": {
+		"Display": "Always needs assistance / relies on others to do the work"
+	  },
+	  "2": {
+		"Display": "Usually needs assistance"
+	  },
+	  "3": {
+		"Display": "Rarely or never needs assistance"
+	  }
+	},
+	"AnswerOrder": [
+	  1,
+	  2,
+	  3
+	],
+	"NextAnswerId": 4,
+	"ChoiceDataExportTags": false,
+	"QuestionID": "QID_Team1.1"
+  }
+}
+,
+{
+  "SurveyID": "SV_cAOa80tDAZqCZEy",
+  "Element": "SQ",
+  "PrimaryAttribute": "QID_Team2.1",
+  "SecondaryAttribute": "Rate each member of your team on the degree to which he or she has needed your assistance or the...",
+  "TertiaryAttribute": null,
+  "Payload": {
+	"QuestionText": "Rate each member of your team on the degree to which he or she has needed your assistance or the assistance of others to complete assigned work.  In addition to rating your teammates, you should also assess yourself where you see your own name. You do not need to rate any individual on this list who either didn't have responsibilities on your team for this sprint, or whom you didn't work closely enough with to be able to assess their contributions.",
+	"DefaultChoices": false,
+	"DataExportTag": "Assistance/Wobble Warriors",
+	"QuestionType": "Matrix",
+	"Selector": "Likert",
+	"SubSelector": "SingleAnswer",
+	"DataVisibility": {
+	  "Private": false,
+	  "Hidden": false
+	},
+	"Configuration": {
+	  "QuestionDescriptionOption": "UseText",
+	  "TextPosition": "inline",
+	  "ChoiceColumnWidth": 25,
+	  "RepeatHeaders": "none",
+	  "WhiteSpace": "OFF",
+	  "MobileFirst": true
+	},
+	"QuestionDescription": "Rate each member of your team on the degree to which he or she has needed your assistance or the...",
+	"DisplayLogic": {
+	  "0": {
+		"0": {
+		  "ChoiceLocator": "q://QID2/SelectableChoice/2",
+		  "Description": "<span class=\"ConjDesc\">If</span> <span class=\"QuestionDesc\">What team(s) have you been working with this sprint? You may choose more than one.</span> <span class=\"LeftOpDesc\">Wobble Warriors</span> <span class=\"OpDesc\">Is Selected</span> ",
+		  "LeftOperand": "q://QID2/SelectableChoice/2",
+		  "LogicType": "Question",
+		  "Operator": "Selected",
+		  "QuestionID": "QID2",
+		  "QuestionIDFromLocator": "QID2",
+		  "QuestionIsInLoop": "no",
+		  "Type": "Expression"
+		},
+		"1": {
+		  "ChoiceLocator": "q://QID7/SelectableChoice/1",
+		  "Conjuction": "And",
+		  "Description": "<span class=\"ConjDesc\">And</span> <span class=\"QuestionDesc\">Have any of your teammates needed an unreasonable amount of assistance to complete their assigned...</span> <span class=\"LeftOpDesc\">Yes</span> <span class=\"OpDesc\">Is Selected</span> ",
+		  "LeftOperand": "q://QID7/SelectableChoice/1",
+		  "LogicType": "Question",
+		  "Operator": "Selected",
+		  "QuestionID": "QID7",
+		  "QuestionIDFromLocator": "QID7",
+		  "QuestionIsInLoop": "no",
+		  "Type": "Expression"
+		},
+		"Type": "If"
+	  },
+	  "Type": "BooleanExpression",
+	  "inPage": false
+	},
+	"Choices": {
+  "1": {
+	"Display": "Anna Thiele"
+  },
+  "2": {
+	"Display": "Katie Monte"
+  },
+  "3": {
+	"Display": "Brian Bauch"
+  },
+  "4": {
+	"Display": "Bryce Niles"
+  },
+  "5": {
+	"Display": "Jaden Schneider"
+  },
+  "6": {
+	"Display": "Olivia LaValley"
+  },
+  "7": {
+	"Display": "Trent LeClair"
+  }
+},
+"ChoiceOrder": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7
+],
+"NextChoiceId": 8
+,
+	"Validation": {
+	  "Settings": {
+		"ForceResponse": "OFF",
+		"ForceResponseType": "ON",
+		"Type": "None"
+	  }
+	},
+	"GradingData": [],
+	"Language": [],
+	"Answers": {
+	  "1": {
+		"Display": "Always needs assistance / relies on others to do the work"
+	  },
+	  "2": {
+		"Display": "Usually needs assistance"
+	  },
+	  "3": {
+		"Display": "Rarely or never needs assistance"
+	  }
+	},
+	"AnswerOrder": [
+	  1,
+	  2,
+	  3
+	],
+	"NextAnswerId": 4,
+	"ChoiceDataExportTags": false,
+	"QuestionID": "QID_Team2.1"
+  }
+}
+,
+    {
+  "SurveyID": "SV_cAOa80tDAZqCZEy",
+  "Element": "SQ",
+  "PrimaryAttribute": "QID_Team1.3",
+  "SecondaryAttribute": "Rate each member of your team on how well he or she listens to you and other teammates. In additi...",
+  "TertiaryAttribute": null,
+  "Payload": {
+	"QuestionText": "Rate each member of your team on how well he or she listens to you and other teammates. In addition to rating your teammates, you should also assess yourself where you see your own name. You do not need to rate any individual on this list who either didn't have responsibilities on your team for this sprint, or whom you didn't work closely enough with to be able to assess this.",
+	"DefaultChoices": false,
+	"DataExportTag": "Listening/Newt!",
+	"QuestionType": "Matrix",
+	"Selector": "Likert",
+	"SubSelector": "SingleAnswer",
+	"DataVisibility": {
+	  "Private": false,
+	  "Hidden": false
+	},
+	"Configuration": {
+	  "QuestionDescriptionOption": "UseText",
+	  "TextPosition": "inline",
+	  "ChoiceColumnWidth": 25,
+	  "RepeatHeaders": "none",
+	  "WhiteSpace": "OFF",
+	  "MobileFirst": true
+	},
+	"QuestionDescription": "Rate each member of your team on how well he or she listens to you and other teammates. In additi...",
+	"DisplayLogic": {
+	  "0": {
+		"0": {
+		  "ChoiceLocator": "q://QID2/SelectableChoice/1",
+		  "Description": "<span class=\"ConjDesc\">If</span> <span class=\"QuestionDesc\">What team(s) have you been working with this sprint? You may choose more than one.</span> <span class=\"LeftOpDesc\">Newt!</span> <span class=\"OpDesc\">Is Selected</span> ",
+		  "LeftOperand": "q://QID2/SelectableChoice/1",
+		  "LogicType": "Question",
+		  "Operator": "Selected",
+		  "QuestionID": "QID2",
+		  "QuestionIDFromLocator": "QID2",
+		  "QuestionIsInLoop": "no",
+		  "Type": "Expression"
+		},
+		"Type": "If"
+	  },
+	  "Type": "BooleanExpression",
+	  "inPage": false
+	},
+	"Choices": {
+  "1": {
+	"Display": "Anna Thiele"
+  },
+  "2": {
+	"Display": "Emyee Fox"
+  },
+  "3": {
+	"Display": "Harrison Kelly"
+  },
+  "4": {
+	"Display": "Jon Gilleland"
+  },
+  "5": {
+	"Display": "Kali Gardner"
+  },
+  "6": {
+	"Display": "Katie Monte"
+  },
+  "7": {
+	"Display": "William Hollinger"
+  },
+  "8": {
+	"Display": "Anton Nikitin"
+  },
+  "9": {
+	"Display": "Bryce Cernohous-Schrader"
+  },
+  "10": {
+	"Display": "Reece Nadle"
+  },
+  "11": {
+	"Display": "Rodger Lugo Cruz"
+  },
+  "12": {
+	"Display": "Tyler Garcia"
+  },
+  "13": {
+	"Display": "Yair Macagon"
+  }
+},
+"ChoiceOrder": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13
+],
+"NextChoiceId": 14
+,
+	"Validation": {
+	  "Settings": {
+		"ForceResponse": "OFF",
+		"ForceResponseType": "ON",
+		"Type": "None"
+	  }
+	},
+	"GradingData": [],
+	"Language": [],
+	"Answers": {
+	  "1": {
+		"Display": "Is always talking — never allows anyone else to speak"
+	  },
+	  "2": {
+		"Display": "Usually doing most of the talking — rarely allows others to speak"
+	  },
+	  "3": {
+		"Display": "Listens appropriately most or all of the time"
+	  }
+	},
+	"AnswerOrder": [
+	  1,
+	  2,
+	  3
+	],
+	"NextAnswerId": 4,
+	"ChoiceDataExportTags": false,
+	"QuestionID": "QID_Team1.3"
+  }
+}
+,
+{
+  "SurveyID": "SV_cAOa80tDAZqCZEy",
+  "Element": "SQ",
+  "PrimaryAttribute": "QID_Team2.3",
+  "SecondaryAttribute": "Rate each member of your team on how well he or she listens to you and other teammates. In additi...",
+  "TertiaryAttribute": null,
+  "Payload": {
+	"QuestionText": "Rate each member of your team on how well he or she listens to you and other teammates. In addition to rating your teammates, you should also assess yourself where you see your own name. You do not need to rate any individual on this list who either didn't have responsibilities on your team for this sprint, or whom you didn't work closely enough with to be able to assess this.",
+	"DefaultChoices": false,
+	"DataExportTag": "Listening/Wobble Warriors",
+	"QuestionType": "Matrix",
+	"Selector": "Likert",
+	"SubSelector": "SingleAnswer",
+	"DataVisibility": {
+	  "Private": false,
+	  "Hidden": false
+	},
+	"Configuration": {
+	  "QuestionDescriptionOption": "UseText",
+	  "TextPosition": "inline",
+	  "ChoiceColumnWidth": 25,
+	  "RepeatHeaders": "none",
+	  "WhiteSpace": "OFF",
+	  "MobileFirst": true
+	},
+	"QuestionDescription": "Rate each member of your team on how well he or she listens to you and other teammates. In additi...",
+	"DisplayLogic": {
+	  "0": {
+		"0": {
+		  "ChoiceLocator": "q://QID2/SelectableChoice/2",
+		  "Description": "<span class=\"ConjDesc\">If</span> <span class=\"QuestionDesc\">What team(s) have you been working with this sprint? You may choose more than one.</span> <span class=\"LeftOpDesc\">Wobble Warriors</span> <span class=\"OpDesc\">Is Selected</span> ",
+		  "LeftOperand": "q://QID2/SelectableChoice/2",
+		  "LogicType": "Question",
+		  "Operator": "Selected",
+		  "QuestionID": "QID2",
+		  "QuestionIDFromLocator": "QID2",
+		  "QuestionIsInLoop": "no",
+		  "Type": "Expression"
+		},
+		"Type": "If"
+	  },
+	  "Type": "BooleanExpression",
+	  "inPage": false
+	},
+	"Choices": {
+  "1": {
+	"Display": "Anna Thiele"
+  },
+  "2": {
+	"Display": "Katie Monte"
+  },
+  "3": {
+	"Display": "Brian Bauch"
+  },
+  "4": {
+	"Display": "Bryce Niles"
+  },
+  "5": {
+	"Display": "Jaden Schneider"
+  },
+  "6": {
+	"Display": "Olivia LaValley"
+  },
+  "7": {
+	"Display": "Trent LeClair"
+  }
+},
+"ChoiceOrder": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7
+],
+"NextChoiceId": 8
+,
+	"Validation": {
+	  "Settings": {
+		"ForceResponse": "OFF",
+		"ForceResponseType": "ON",
+		"Type": "None"
+	  }
+	},
+	"GradingData": [],
+	"Language": [],
+	"Answers": {
+	  "1": {
+		"Display": "Is always talking — never allows anyone else to speak"
+	  },
+	  "2": {
+		"Display": "Usually doing most of the talking — rarely allows others to speak"
+	  },
+	  "3": {
+		"Display": "Listens appropriately most or all of the time"
+	  }
+	},
+	"AnswerOrder": [
+	  1,
+	  2,
+	  3
+	],
+	"NextAnswerId": 4,
+	"ChoiceDataExportTags": false,
+	"QuestionID": "QID_Team2.3"
+  }
+}
+,
+    {
+  "SurveyID": "SV_cAOa80tDAZqCZEy",
+  "Element": "SQ",
+  "PrimaryAttribute": "QID_Team1.4",
+  "SecondaryAttribute": "From your perspective, which teammates, if any, not only listen consistently but also respond app...",
+  "TertiaryAttribute": null,
+  "Payload": {
+	"QuestionText": "From your perspective, which teammates, if any, not only listen consistently but also respond appropriately when others are speaking?  (Choose up to two teammates who do this most consistently.)",
+	"DefaultChoices": false,
+	"DataExportTag": "ListeningRespond/Newt!",
+	"QuestionType": "MC",
+	"Selector": "MAVR",
+	"SubSelector": "TX",
+	"DataVisibility": {
+	  "Private": false,
+	  "Hidden": false
+	},
+	"Configuration": {
+	  "QuestionDescriptionOption": "UseText"
+	},
+	"QuestionDescription": "From your perspective, which teammates, if any, not only listen consistently but also respond app...",
+	"DisplayLogic": {
+	  "0": {
+		"0": {
+		  "ChoiceLocator": "q://QID2/SelectableChoice/1",
+		  "Description": "<span class=\"ConjDesc\">If</span> <span class=\"QuestionDesc\">What team(s) have you been working with this sprint? You may choose more than one.</span> <span class=\"LeftOpDesc\">Newt!</span> <span class=\"OpDesc\">Is Selected</span> ",
+		  "LeftOperand": "q://QID2/SelectableChoice/1",
+		  "LogicType": "Question",
+		  "Operator": "Selected",
+		  "QuestionID": "QID2",
+		  "QuestionIDFromLocator": "QID2",
+		  "QuestionIsInLoop": "no",
+		  "Type": "Expression"
+		},
+		"Type": "If"
+	  },
+	  "Type": "BooleanExpression",
+	  "inPage": false
+	},
+	"Choices": {
+  "1": {
+	"Display": "Anna Thiele"
+  },
+  "2": {
+	"Display": "Emyee Fox"
+  },
+  "3": {
+	"Display": "Harrison Kelly"
+  },
+  "4": {
+	"Display": "Jon Gilleland"
+  },
+  "5": {
+	"Display": "Kali Gardner"
+  },
+  "6": {
+	"Display": "Katie Monte"
+  },
+  "7": {
+	"Display": "William Hollinger"
+  },
+  "8": {
+	"Display": "Anton Nikitin"
+  },
+  "9": {
+	"Display": "Bryce Cernohous-Schrader"
+  },
+  "10": {
+	"Display": "Reece Nadle"
+  },
+  "11": {
+	"Display": "Rodger Lugo Cruz"
+  },
+  "12": {
+	"Display": "Tyler Garcia"
+  },
+  "13": {
+	"Display": "Yair Macagon"
+  }
+},
+"ChoiceOrder": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13
+],
+"NextChoiceId": 14
+,
+	"Validation": {
+	  "Settings": {
+		"ForceResponse": "OFF",
+		"ForceResponseType": "ON",
+		"Type": "ChoiceRange",
+		"MinChoices": "0",
+		"MaxChoices": "2"
+	  }
+	},
+	"GradingData": [],
+	"Language": [],
+	"NextAnswerId": 3,
+	"QuestionID": "QID_Team1.4"
+  }
+}
+,
+{
+  "SurveyID": "SV_cAOa80tDAZqCZEy",
+  "Element": "SQ",
+  "PrimaryAttribute": "QID_Team2.4",
+  "SecondaryAttribute": "From your perspective, which teammates, if any, not only listen consistently but also respond app...",
+  "TertiaryAttribute": null,
+  "Payload": {
+	"QuestionText": "From your perspective, which teammates, if any, not only listen consistently but also respond appropriately when others are speaking?  (Choose up to two teammates who do this most consistently.)",
+	"DefaultChoices": false,
+	"DataExportTag": "ListeningRespond/Wobble Warriors",
+	"QuestionType": "MC",
+	"Selector": "MAVR",
+	"SubSelector": "TX",
+	"DataVisibility": {
+	  "Private": false,
+	  "Hidden": false
+	},
+	"Configuration": {
+	  "QuestionDescriptionOption": "UseText"
+	},
+	"QuestionDescription": "From your perspective, which teammates, if any, not only listen consistently but also respond app...",
+	"DisplayLogic": {
+	  "0": {
+		"0": {
+		  "ChoiceLocator": "q://QID2/SelectableChoice/2",
+		  "Description": "<span class=\"ConjDesc\">If</span> <span class=\"QuestionDesc\">What team(s) have you been working with this sprint? You may choose more than one.</span> <span class=\"LeftOpDesc\">Wobble Warriors</span> <span class=\"OpDesc\">Is Selected</span> ",
+		  "LeftOperand": "q://QID2/SelectableChoice/2",
+		  "LogicType": "Question",
+		  "Operator": "Selected",
+		  "QuestionID": "QID2",
+		  "QuestionIDFromLocator": "QID2",
+		  "QuestionIsInLoop": "no",
+		  "Type": "Expression"
+		},
+		"Type": "If"
+	  },
+	  "Type": "BooleanExpression",
+	  "inPage": false
+	},
+	"Choices": {
+  "1": {
+	"Display": "Anna Thiele"
+  },
+  "2": {
+	"Display": "Katie Monte"
+  },
+  "3": {
+	"Display": "Brian Bauch"
+  },
+  "4": {
+	"Display": "Bryce Niles"
+  },
+  "5": {
+	"Display": "Jaden Schneider"
+  },
+  "6": {
+	"Display": "Olivia LaValley"
+  },
+  "7": {
+	"Display": "Trent LeClair"
+  }
+},
+"ChoiceOrder": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7
+],
+"NextChoiceId": 8
+,
+	"Validation": {
+	  "Settings": {
+		"ForceResponse": "OFF",
+		"ForceResponseType": "ON",
+		"Type": "ChoiceRange",
+		"MinChoices": "0",
+		"MaxChoices": "2"
+	  }
+	},
+	"GradingData": [],
+	"Language": [],
+	"NextAnswerId": 3,
+	"QuestionID": "QID_Team2.4"
+  }
+}
+
+  ]
+}

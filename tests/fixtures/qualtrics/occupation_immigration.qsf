@@ -1,0 +1,962 @@
+{
+  "SurveyEntry": {
+    "SurveyID": "SV_6g1bkEcLPtkqrt4",
+    "SurveyName": "Occupation & Immigration Perceptions Survey",
+    "SurveyDescription": null,
+    "SurveyOwnerID": "UR_me",
+    "SurveyBrandID": "myuni",
+    "DivisionID": null,
+    "SurveyLanguage": "EN",
+    "SurveyActiveResponseSet": "RS_egMjYarj3XbMIUS",
+    "SurveyStatus": "Inactive",
+    "SurveyStartDate": "0000-00-00 00:00:00",
+    "SurveyExpirationDate": "0000-00-00 00:00:00",
+    "SurveyCreationDate": "2025-06-04 15:45:45",
+    "CreatorID": "UR_me",
+    "LastModified": "2025-06-04 15:47:39",
+    "LastAccessed": "0000-00-00 00:00:00",
+    "LastActivated": "0000-00-00 00:00:00",
+    "Deleted": null
+  },
+  "SurveyElements": [
+    {
+      "SurveyID": "SV_6g1bkEcLPtkqrt4",
+      "Element": "BL",
+      "PrimaryAttribute": "Survey Blocks",
+      "SecondaryAttribute": null,
+      "TertiaryAttribute": null,
+      "Payload": [
+        {
+          "Type": "Default",
+          "Description": "Block-1",
+          "ID": "BL_8cvoCOLsAjxx03A",
+          "BlockElements": [
+            {
+              "Type": "Question",
+              "QuestionID": "QID17"
+            },
+            {
+              "Type": "Question",
+              "QuestionID": "QID18"
+            },
+            {
+              "Type": "Question",
+              "QuestionID": "QID19"
+            },
+            {
+              "Type": "Question",
+              "QuestionID": "QID20"
+            },
+            {
+              "Type": "Question",
+              "QuestionID": "QID21"
+            },
+            {
+              "Type": "Question",
+              "QuestionID": "QID22"
+            },
+            {
+              "Type": "Question",
+              "QuestionID": "QID23"
+            },
+            {
+              "Type": "Question",
+              "QuestionID": "QID24"
+            },
+            {
+              "Type": "Question",
+              "QuestionID": "QID25"
+            },
+            {
+              "Type": "Question",
+              "QuestionID": "QID26"
+            },
+            {
+              "Type": "Question",
+              "QuestionID": "QID27"
+            },
+            {
+              "Type": "Question",
+              "QuestionID": "QID28"
+            }
+          ]
+        },
+        {
+          "Type": "Trash",
+          "Description": "Trash / Unused Questions",
+          "ID": "BL_eG4x0mW97sOE4Zg"
+        }
+      ]
+    },
+    {
+      "SurveyID": "SV_6g1bkEcLPtkqrt4",
+      "Element": "FL",
+      "PrimaryAttribute": "Survey Flow",
+      "SecondaryAttribute": null,
+      "TertiaryAttribute": null,
+      "Payload": {
+        "Flow": [
+          {
+            "ID": "BL_8cvoCOLsAjxx03A",
+            "Type": "Block",
+            "FlowID": "FL_2"
+          },
+          {
+            "ID": "BL_3yM24qEXy4nLsQ6",
+            "Type": "Standard",
+            "FlowID": "FL_3"
+          }
+        ],
+        "Properties": {
+          "Count": 3
+        },
+        "FlowID": "FL_1",
+        "Type": "Root"
+      }
+    },
+    {
+      "SurveyID": "SV_6g1bkEcLPtkqrt4",
+      "Element": "PL",
+      "PrimaryAttribute": "Preview Link",
+      "SecondaryAttribute": null,
+      "TertiaryAttribute": null,
+      "Payload": {
+        "PreviewType": "Brand",
+        "PreviewID": "7a505158-c18a-4260-bc73-b009fb39689c"
+      }
+    },
+    {
+      "SurveyID": "SV_6g1bkEcLPtkqrt4",
+      "Element": "PROJ",
+      "PrimaryAttribute": "CORE",
+      "SecondaryAttribute": null,
+      "TertiaryAttribute": "1.1.0",
+      "Payload": {
+        "ProjectCategory": "CORE",
+        "SchemaVersion": "1.1.0"
+      }
+    },
+    {
+      "SurveyID": "SV_6g1bkEcLPtkqrt4",
+      "Element": "QC",
+      "PrimaryAttribute": "Survey Question Count",
+      "SecondaryAttribute": "0",
+      "TertiaryAttribute": null,
+      "Payload": null
+    },
+    {
+      "SurveyID": "SV_6g1bkEcLPtkqrt4",
+      "Element": "RS",
+      "PrimaryAttribute": "RS_egMjYarj3XbMIUS",
+      "SecondaryAttribute": "Default Response Set",
+      "TertiaryAttribute": null,
+      "Payload": null
+    },
+    {
+      "SurveyID": "SV_6g1bkEcLPtkqrt4",
+      "Element": "SCO",
+      "PrimaryAttribute": "Scoring",
+      "SecondaryAttribute": null,
+      "TertiaryAttribute": null,
+      "Payload": {
+        "ScoringCategories": [],
+        "ScoringCategoryGroups": [],
+        "ScoringSummaryCategory": null,
+        "ScoringSummaryAfterQuestions": 0,
+        "ScoringSummaryAfterSurvey": 0,
+        "DefaultScoringCategory": null,
+        "AutoScoringCategory": null
+      }
+    },
+    {
+      "SurveyID": "SV_6g1bkEcLPtkqrt4",
+      "Element": "SO",
+      "PrimaryAttribute": "Survey Options",
+      "SecondaryAttribute": null,
+      "TertiaryAttribute": null,
+      "Payload": {
+        "BackButton": "false",
+        "SaveAndContinue": "true",
+        "SurveyProtection": "PublicSurvey",
+        "BallotBoxStuffingPrevention": "false",
+        "NoIndex": "Yes",
+        "SecureResponseFiles": "true",
+        "SurveyExpiration": "None",
+        "SurveyTermination": "DefaultMessage",
+        "Header": "",
+        "Footer": "",
+        "ProgressBarDisplay": "None",
+        "PartialData": "+1 week",
+        "ValidationMessage": "",
+        "PreviousButton": "",
+        "NextButton": "",
+        "SurveyTitle": "Qualtrics Survey | Qualtrics Experience Management",
+        "SkinLibrary": "myuni",
+        "SkinType": "templated",
+        "Skin": {
+          "brandingId": "8472729449",
+          "templateId": "*base",
+          "overrides": null
+        },
+        "NewScoring": 1,
+        "SurveyMetaDescription": "The most powerful, simple and trusted way to gather experience data. Start your journey to experience management and try a free account today.",
+        "SurveyName": "Occupation & Immigration Perceptions Survey"
+      }
+    },
+    {
+      "SurveyID": "SV_6g1bkEcLPtkqrt4",
+      "Element": "SQ",
+      "PrimaryAttribute": "QID17",
+      "SecondaryAttribute": "Which of the following best describes your occupation? (Select one)",
+      "TertiaryAttribute": null,
+      "Payload": {
+        "QuestionText": "Which of the following best describes your occupation? (Select one)",
+        "DataExportTag": "Q17",
+        "QuestionType": "MC",
+        "Selector": "SAVR",
+        "SubSelector": "TX",
+        "DataVisibility": {
+          "Private": false,
+          "Hidden": false
+        },
+        "Configuration": {
+          "QuestionDescriptionOption": "UseText",
+          "Autoscale": {
+            "YScale": {
+              "Name": "agreeDisagree",
+              "Type": "likert",
+              "Reverse": false
+            }
+          }
+        },
+        "QuestionDescription": "Which of the following best describes your occupation? (Select one)",
+        "Choices": {
+          "1": {
+            "Display": "Management Occupations (11-0000)"
+          },
+          "2": {
+            "Display": "Business and Financial Operations Occupations (13-0000)"
+          },
+          "3": {
+            "Display": "Computer and Mathematical Occupations (15-0000)"
+          },
+          "4": {
+            "Display": "Architecture and Engineering Occupations (17-0000)"
+          },
+          "5": {
+            "Display": "Life, Physical, and Social Science Occupations (19-0000)"
+          },
+          "6": {
+            "Display": "Community and Social Service Occupations (21-0000)"
+          },
+          "7": {
+            "Display": "Legal Occupations (23-0000)"
+          },
+          "8": {
+            "Display": "Education, Training, and Library Occupations (25-0000)"
+          },
+          "9": {
+            "Display": "Arts, Design, Entertainment, Sports, and Media Occupations (27-0000)"
+          },
+          "10": {
+            "Display": "Healthcare Practitioners and Technical Occupations (29-0000)"
+          },
+          "11": {
+            "Display": "Protective Service Occupations (33-0000)"
+          },
+          "12": {
+            "Display": "Food Preparation and Serving Related Occupations (35-0000)"
+          },
+          "13": {
+            "Display": "Building and Grounds Cleaning and Maintenance Occupations (37-0000)"
+          },
+          "14": {
+            "Display": "Personal Care and Service Occupations (39-0000)"
+          },
+          "15": {
+            "Display": "Sales and Related Occupations (41-0000)"
+          },
+          "16": {
+            "Display": "Office and Administrative Support Occupations (43-0000)"
+          },
+          "17": {
+            "Display": "Farming, Fishing, and Forestry Occupations (45-0000)"
+          },
+          "18": {
+            "Display": "Construction and Extraction Occupations (47-0000)"
+          },
+          "19": {
+            "Display": "Installation, Maintenance, and Repair Occupations (49-0000)"
+          },
+          "20": {
+            "Display": "Production Occupations (51-0000)"
+          },
+          "21": {
+            "Display": "Transportation and Material Moving Occupations (53-0000)"
+          },
+          "22": {
+            "Display": "Other (please specify)"
+          }
+        },
+        "ChoiceOrder": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ],
+        "Validation": {
+          "Settings": {
+            "ForceResponse": "OFF",
+            "Type": "None"
+          }
+        },
+        "Language": [],
+        "NextChoiceId": 23,
+        "NextAnswerId": 1,
+        "QuestionID": "QID17"
+      }
+    },
+    {
+      "SurveyID": "SV_6g1bkEcLPtkqrt4",
+      "Element": "SQ",
+      "PrimaryAttribute": "QID18",
+      "SecondaryAttribute": "What best describes your specific field? (Select one)",
+      "TertiaryAttribute": null,
+      "Payload": {
+        "QuestionText": "What best describes your specific field? (Select one)",
+        "DataExportTag": "Q18",
+        "QuestionType": "MC",
+        "Selector": "SAVR",
+        "SubSelector": "TX",
+        "DataVisibility": {
+          "Private": false,
+          "Hidden": false
+        },
+        "Configuration": {
+          "QuestionDescriptionOption": "UseText",
+          "Autoscale": {
+            "YScale": {
+              "Name": "agreeDisagree",
+              "Type": "likert",
+              "Reverse": false
+            }
+          }
+        },
+        "QuestionDescription": "What best describes your specific field? (Select one)",
+        "Choices": {
+          "1": {
+            "Display": "Computer and Information Research Scientists (15-1111)"
+          },
+          "2": {
+            "Display": "Computer Systems Analysts (15-1121)"
+          },
+          "3": {
+            "Display": "Information Security Analysts (15-1122)"
+          },
+          "4": {
+            "Display": "Software Developers, Applications (15-1132)"
+          },
+          "5": {
+            "Display": "Software Developers, Systems Software (15-1133)"
+          },
+          "6": {
+            "Display": "Web Developers (15-1134)"
+          },
+          "7": {
+            "Display": "Database Administrators (15-1141)"
+          },
+          "8": {
+            "Display": "Network and Computer Systems Administrators (15-1142)"
+          },
+          "9": {
+            "Display": "Computer Network Architects (15-1143)"
+          },
+          "10": {
+            "Display": "Computer Programmers (15-1131)"
+          },
+          "11": {
+            "Display": "Other (please specify)"
+          }
+        },
+        "ChoiceOrder": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "Validation": {
+          "Settings": {
+            "ForceResponse": "OFF",
+            "Type": "None"
+          }
+        },
+        "Language": [],
+        "NextChoiceId": 12,
+        "NextAnswerId": 1,
+        "QuestionID": "QID18"
+      }
+    },
+    {
+      "SurveyID": "SV_6g1bkEcLPtkqrt4",
+      "Element": "SQ",
+      "PrimaryAttribute": "QID19",
+      "SecondaryAttribute": "What is your specific job role? (Select one)",
+      "TertiaryAttribute": null,
+      "Payload": {
+        "QuestionText": "What is your specific job role? (Select one)",
+        "DataExportTag": "Q19",
+        "QuestionType": "MC",
+        "Selector": "SAVR",
+        "SubSelector": "TX",
+        "DataVisibility": {
+          "Private": false,
+          "Hidden": false
+        },
+        "Configuration": {
+          "QuestionDescriptionOption": "UseText",
+          "Autoscale": {
+            "YScale": {
+              "Name": "agreeDisagree",
+              "Type": "likert",
+              "Reverse": false
+            }
+          }
+        },
+        "QuestionDescription": "What is your specific job role? (Select one)",
+        "Choices": {
+          "1": {
+            "Display": "Mobile App Developer"
+          },
+          "2": {
+            "Display": "Full-Stack Developer"
+          },
+          "3": {
+            "Display": "Back-End Developer"
+          },
+          "4": {
+            "Display": "Front-End Developer"
+          },
+          "5": {
+            "Display": "Embedded Systems Developer"
+          },
+          "6": {
+            "Display": "Game Developer"
+          },
+          "7": {
+            "Display": "Enterprise Software Developer"
+          },
+          "8": {
+            "Display": "Cloud Computing Developer"
+          },
+          "9": {
+            "Display": "AI/Machine Learning Engineer"
+          },
+          "10": {
+            "Display": "Other (please specify)"
+          }
+        },
+        "ChoiceOrder": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "Validation": {
+          "Settings": {
+            "ForceResponse": "OFF",
+            "Type": "None"
+          }
+        },
+        "Language": [],
+        "NextChoiceId": 11,
+        "NextAnswerId": 1,
+        "QuestionID": "QID19"
+      }
+    },
+    {
+      "SurveyID": "SV_6g1bkEcLPtkqrt4",
+      "Element": "SQ",
+      "PrimaryAttribute": "QID20",
+      "SecondaryAttribute": "So that we know you are paying attention, please ignore the question on the screen and select the option \u201cOften\u201d.\n\nHow often do you dine out?",
+      "TertiaryAttribute": null,
+      "Payload": {
+        "QuestionText": "So that we know you are paying attention, please ignore the question on the screen and select the option \u201cOften\u201d.\n\nHow often do you dine out?",
+        "DataExportTag": "Q20",
+        "QuestionType": "MC",
+        "Selector": "SAVR",
+        "SubSelector": "TX",
+        "DataVisibility": {
+          "Private": false,
+          "Hidden": false
+        },
+        "Configuration": {
+          "QuestionDescriptionOption": "UseText",
+          "Autoscale": {
+            "YScale": {
+              "Name": "agreeDisagree",
+              "Type": "likert",
+              "Reverse": false
+            }
+          }
+        },
+        "QuestionDescription": "So that we know you are paying attention, please ignore the question on the screen and select the option \u201cOften\u201d.\n\nHow often do you dine out?",
+        "Choices": {
+          "1": {
+            "Display": "Never"
+          },
+          "2": {
+            "Display": "Hardly ever"
+          },
+          "3": {
+            "Display": "Sometimes"
+          },
+          "4": {
+            "Display": "Often"
+          },
+          "5": {
+            "Display": "Very often"
+          }
+        },
+        "ChoiceOrder": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "Validation": {
+          "Settings": {
+            "ForceResponse": "OFF",
+            "Type": "None"
+          }
+        },
+        "Language": [],
+        "NextChoiceId": 6,
+        "NextAnswerId": 1,
+        "QuestionID": "QID20"
+      }
+    },
+    {
+      "SurveyID": "SV_6g1bkEcLPtkqrt4",
+      "Element": "SQ",
+      "PrimaryAttribute": "QID21",
+      "SecondaryAttribute": "To what extent, if at all, do you believe that the current number of immigrants in the country makes it harder for people already in the United States to find or keep a job?",
+      "TertiaryAttribute": null,
+      "Payload": {
+        "QuestionText": "To what extent, if at all, do you believe that the current number of immigrants in the country makes it harder for people already in the United States to find or keep a job?",
+        "DataExportTag": "Q21",
+        "QuestionType": "MC",
+        "Selector": "SAVR",
+        "SubSelector": "TX",
+        "DataVisibility": {
+          "Private": false,
+          "Hidden": false
+        },
+        "Configuration": {
+          "QuestionDescriptionOption": "UseText",
+          "Autoscale": {
+            "YScale": {
+              "Name": "agreeDisagree",
+              "Type": "likert",
+              "Reverse": false
+            }
+          }
+        },
+        "QuestionDescription": "To what extent, if at all, do you believe that the current number of immigrants in the country makes it harder for people already in the United States to find or keep a job?",
+        "Choices": {
+          "1": {
+            "Display": "Not at all."
+          },
+          "2": {
+            "Display": "Slightly."
+          },
+          "3": {
+            "Display": "Moderately."
+          },
+          "4": {
+            "Display": "Considerably."
+          },
+          "5": {
+            "Display": "Extremely."
+          }
+        },
+        "ChoiceOrder": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "Validation": {
+          "Settings": {
+            "ForceResponse": "OFF",
+            "Type": "None"
+          }
+        },
+        "Language": [],
+        "NextChoiceId": 6,
+        "NextAnswerId": 1,
+        "QuestionID": "QID21"
+      }
+    },
+    {
+      "SurveyID": "SV_6g1bkEcLPtkqrt4",
+      "Element": "SQ",
+      "PrimaryAttribute": "QID22",
+      "SecondaryAttribute": "To what extent, if at all, do you believe that the current number of immigrants in the country makes it harder for you personally to find or keep a job?",
+      "TertiaryAttribute": null,
+      "Payload": {
+        "QuestionText": "To what extent, if at all, do you believe that the current number of immigrants in the country makes it harder for you personally to find or keep a job?",
+        "DataExportTag": "Q22",
+        "QuestionType": "MC",
+        "Selector": "SAVR",
+        "SubSelector": "TX",
+        "DataVisibility": {
+          "Private": false,
+          "Hidden": false
+        },
+        "Configuration": {
+          "QuestionDescriptionOption": "UseText",
+          "Autoscale": {
+            "YScale": {
+              "Name": "agreeDisagree",
+              "Type": "likert",
+              "Reverse": false
+            }
+          }
+        },
+        "QuestionDescription": "To what extent, if at all, do you believe that the current number of immigrants in the country makes it harder for you personally to find or keep a job?",
+        "Choices": {
+          "1": {
+            "Display": "Not at all."
+          },
+          "2": {
+            "Display": "Slightly."
+          },
+          "3": {
+            "Display": "Moderately."
+          },
+          "4": {
+            "Display": "Considerably."
+          },
+          "5": {
+            "Display": "Extremely."
+          }
+        },
+        "ChoiceOrder": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "Validation": {
+          "Settings": {
+            "ForceResponse": "OFF",
+            "Type": "None"
+          }
+        },
+        "Language": [],
+        "NextChoiceId": 6,
+        "NextAnswerId": 1,
+        "QuestionID": "QID22"
+      }
+    },
+    {
+      "SurveyID": "SV_6g1bkEcLPtkqrt4",
+      "Element": "SQ",
+      "PrimaryAttribute": "QID23",
+      "SecondaryAttribute": "What percentage of the U.S. workforce consists of immigrants? (open %)",
+      "TertiaryAttribute": null,
+      "Payload": {
+        "QuestionText": "What percentage of the U.S. workforce consists of immigrants? (open %)",
+        "DefaultChoices": false,
+        "DataExportTag": "Q23",
+        "QuestionType": "TE",
+        "Selector": "SL",
+        "DataVisibility": {
+          "Private": false,
+          "Hidden": false
+        },
+        "Configuration": {
+          "QuestionDescriptionOption": "UseText"
+        },
+        "QuestionDescription": "What percentage of the U.S. workforce consists of immigrants? (open %)",
+        "Validation": {
+          "Settings": {
+            "ForceResponse": "OFF",
+            "ForceResponseType": "ON",
+            "Type": "None",
+            "MinChars": "1",
+            "ContentType": null,
+            "ValidDateType": "DateWithFormat",
+            "ValidPhoneType": "ValidUSPhone",
+            "ValidZipType": "ValidUSZip",
+            "ValidNumber": {
+              "Min": "",
+              "Max": "",
+              "NumDecimals": ""
+            }
+          }
+        },
+        "GradingData": [],
+        "Language": [],
+        "NextChoiceId": 4,
+        "NextAnswerId": 1,
+        "SearchSource": {
+          "AllowFreeResponse": "false"
+        },
+        "QuestionID": "QID23"
+      }
+    },
+    {
+      "SurveyID": "SV_6g1bkEcLPtkqrt4",
+      "Element": "SQ",
+      "PrimaryAttribute": "QID24",
+      "SecondaryAttribute": "What percentage of your state's workforce consists of immigrants? (open %)",
+      "TertiaryAttribute": null,
+      "Payload": {
+        "QuestionText": "What percentage of your state's workforce consists of immigrants? (open %)",
+        "DefaultChoices": false,
+        "DataExportTag": "Q24",
+        "QuestionType": "TE",
+        "Selector": "SL",
+        "DataVisibility": {
+          "Private": false,
+          "Hidden": false
+        },
+        "Configuration": {
+          "QuestionDescriptionOption": "UseText"
+        },
+        "QuestionDescription": "What percentage of your state's workforce consists of immigrants? (open %)",
+        "Validation": {
+          "Settings": {
+            "ForceResponse": "OFF",
+            "ForceResponseType": "ON",
+            "Type": "None",
+            "MinChars": "1",
+            "ContentType": null,
+            "ValidDateType": "DateWithFormat",
+            "ValidPhoneType": "ValidUSPhone",
+            "ValidZipType": "ValidUSZip",
+            "ValidNumber": {
+              "Min": "",
+              "Max": "",
+              "NumDecimals": ""
+            }
+          }
+        },
+        "GradingData": [],
+        "Language": [],
+        "NextChoiceId": 4,
+        "NextAnswerId": 1,
+        "SearchSource": {
+          "AllowFreeResponse": "false"
+        },
+        "QuestionID": "QID24"
+      }
+    },
+    {
+      "SurveyID": "SV_6g1bkEcLPtkqrt4",
+      "Element": "SQ",
+      "PrimaryAttribute": "QID25",
+      "SecondaryAttribute": "What percentage of the workforce in Computer and Mathematical Occupations in the country consists of immigrants? (open %)",
+      "TertiaryAttribute": null,
+      "Payload": {
+        "QuestionText": "What percentage of the workforce in Computer and Mathematical Occupations in the country consists of immigrants? (open %)",
+        "DefaultChoices": false,
+        "DataExportTag": "Q25",
+        "QuestionType": "TE",
+        "Selector": "SL",
+        "DataVisibility": {
+          "Private": false,
+          "Hidden": false
+        },
+        "Configuration": {
+          "QuestionDescriptionOption": "UseText"
+        },
+        "QuestionDescription": "What percentage of the workforce in Computer and Mathematical Occupations in the country consists of immigrants? (open %)",
+        "Validation": {
+          "Settings": {
+            "ForceResponse": "OFF",
+            "ForceResponseType": "ON",
+            "Type": "None",
+            "MinChars": "1",
+            "ContentType": null,
+            "ValidDateType": "DateWithFormat",
+            "ValidPhoneType": "ValidUSPhone",
+            "ValidZipType": "ValidUSZip",
+            "ValidNumber": {
+              "Min": "",
+              "Max": "",
+              "NumDecimals": ""
+            }
+          }
+        },
+        "GradingData": [],
+        "Language": [],
+        "NextChoiceId": 4,
+        "NextAnswerId": 1,
+        "SearchSource": {
+          "AllowFreeResponse": "false"
+        },
+        "QuestionID": "QID25"
+      }
+    },
+    {
+      "SurveyID": "SV_6g1bkEcLPtkqrt4",
+      "Element": "SQ",
+      "PrimaryAttribute": "QID26",
+      "SecondaryAttribute": "What percentage of Software Developers, Applications in the country consist of immigrants? (open %)",
+      "TertiaryAttribute": null,
+      "Payload": {
+        "QuestionText": "What percentage of Software Developers, Applications in the country consist of immigrants? (open %)",
+        "DefaultChoices": false,
+        "DataExportTag": "Q26",
+        "QuestionType": "TE",
+        "Selector": "SL",
+        "DataVisibility": {
+          "Private": false,
+          "Hidden": false
+        },
+        "Configuration": {
+          "QuestionDescriptionOption": "UseText"
+        },
+        "QuestionDescription": "What percentage of Software Developers, Applications in the country consist of immigrants? (open %)",
+        "Validation": {
+          "Settings": {
+            "ForceResponse": "OFF",
+            "ForceResponseType": "ON",
+            "Type": "None",
+            "MinChars": "1",
+            "ContentType": null,
+            "ValidDateType": "DateWithFormat",
+            "ValidPhoneType": "ValidUSPhone",
+            "ValidZipType": "ValidUSZip",
+            "ValidNumber": {
+              "Min": "",
+              "Max": "",
+              "NumDecimals": ""
+            }
+          }
+        },
+        "GradingData": [],
+        "Language": [],
+        "NextChoiceId": 4,
+        "NextAnswerId": 1,
+        "SearchSource": {
+          "AllowFreeResponse": "false"
+        },
+        "QuestionID": "QID26"
+      }
+    },
+    {
+      "SurveyID": "SV_6g1bkEcLPtkqrt4",
+      "Element": "SQ",
+      "PrimaryAttribute": "QID27",
+      "SecondaryAttribute": "<b>Understanding Our Workforce</b><br>The number of immigrants in the workforce is a common worry among people in the country.<br><br>Most Americans, including Republicans and Democrats, believe that having correct and accurate information is important to making sound judgments and effective policy opinions. Knowing the facts helps us all, and we are committed to giving you the correct information.<br><br>To help you get an accurate picture, here is what official <b>2025</b> data from the nonpartisan U.S. Census Bureau indicates:<br>\u2022 Immigrants make up <i>X%</i> of all workers in the country.<br>\u2022 Immigrants make up <i>X%</i> of all workers in your state.",
+      "TertiaryAttribute": null,
+      "Payload": {
+        "QuestionText": "<b>Understanding Our Workforce</b><br>The number of immigrants in the workforce is a common worry among people in the country.<br><br>Most Americans, including Republicans and Democrats, believe that having correct and accurate information is important to making sound judgments and effective policy opinions. Knowing the facts helps us all, and we are committed to giving you the correct information.<br><br>To help you get an accurate picture, here is what official <b>2025</b> data from the nonpartisan U.S. Census Bureau indicates:<br>\u2022 Immigrants make up <i>X%</i> of all workers in the country.<br>\u2022 Immigrants make up <i>X%</i> of all workers in your state.",
+        "DefaultChoices": false,
+        "DataExportTag": "Q27",
+        "QuestionType": "DB",
+        "Selector": "TB",
+        "DataVisibility": {
+          "Private": false,
+          "Hidden": false
+        },
+        "Configuration": {
+          "QuestionDescriptionOption": "UseText"
+        },
+        "QuestionDescription": "<b>Understanding Our Workforce</b><br>The number of immigrants in the workforce is a common worry among people in the country.<br><br>Most Americans, including Republicans and Democrats, believe that having correct and accurate information is important to making sound judgments and effective policy opinions. Knowing the facts helps us all, and we are committed to giving you the correct information.<br><br>To help you get an accurate picture, here is what official <b>2025</b> data from the nonpartisan U.S. Census Bureau indicates:<br>\u2022 Immigrants make up <i>X%</i> of all workers in the country.<br>\u2022 Immigrants make up <i>X%</i> of all workers in your state.",
+        "ChoiceOrder": [],
+        "Validation": {
+          "Settings": {
+            "Type": "None"
+          }
+        },
+        "GradingData": [],
+        "Language": [],
+        "NextChoiceId": 4,
+        "NextAnswerId": 1,
+        "QuestionID": "QID27"
+      }
+    },
+    {
+      "SurveyID": "SV_6g1bkEcLPtkqrt4",
+      "Element": "SQ",
+      "PrimaryAttribute": "QID28",
+      "SecondaryAttribute": "Now, we want you to see the differences between what <b>you believe</b> about the number of immigrants in the workforce and the U.S. Census Bureau\u2019s figures.<br><br>You said that <i>XX%</i> of the U.S. workforce consists of immigrants.<br>Yet, according to the U.S. Census Bureau, <i>XX%</i> of the U.S. workforce consists of immigrants.<br><br><b>Comparative bar graph:</b><br>{Dynamic Bar Chart}<br><br>You said that <i>XX%</i> of your state's workforce consists of immigrants.<br>Yet according to the U.S. Census Bureau, <i>XX%</i> of your state's workforce consists of immigrants.<br><br><b>Comparative bar graph:</b><br>{Dynamic Bar Chart}<br><br><i>Source: U.S. Census Bureau (2025 American Community Survey)</i>",
+      "TertiaryAttribute": null,
+      "Payload": {
+        "QuestionText": "Now, we want you to see the differences between what <b>you believe</b> about the number of immigrants in the workforce and the U.S. Census Bureau\u2019s figures.<br><br>You said that <i>XX%</i> of the U.S. workforce consists of immigrants.<br>Yet, according to the U.S. Census Bureau, <i>XX%</i> of the U.S. workforce consists of immigrants.<br><br><b>Comparative bar graph:</b><br>{Dynamic Bar Chart}<br><br>You said that <i>XX%</i> of your state's workforce consists of immigrants.<br>Yet according to the U.S. Census Bureau, <i>XX%</i> of your state's workforce consists of immigrants.<br><br><b>Comparative bar graph:</b><br>{Dynamic Bar Chart}<br><br><i>Source: U.S. Census Bureau (2025 American Community Survey)</i>",
+        "DefaultChoices": false,
+        "DataExportTag": "Q28",
+        "QuestionType": "DB",
+        "Selector": "TB",
+        "DataVisibility": {
+          "Private": false,
+          "Hidden": false
+        },
+        "Configuration": {
+          "QuestionDescriptionOption": "UseText"
+        },
+        "QuestionDescription": "Now, we want you to see the differences between what <b>you believe</b> about the number of immigrants in the workforce and the U.S. Census Bureau\u2019s figures.<br><br>You said that <i>XX%</i> of the U.S. workforce consists of immigrants.<br>Yet, according to the U.S. Census Bureau, <i>XX%</i> of the U.S. workforce consists of immigrants.<br><br><b>Comparative bar graph:</b><br>{Dynamic Bar Chart}<br><br>You said that <i>XX%</i> of your state's workforce consists of immigrants.<br>Yet according to the U.S. Census Bureau, <i>XX%</i> of your state's workforce consists of immigrants.<br><br><b>Comparative bar graph:</b><br>{Dynamic Bar Chart}<br><br><i>Source: U.S. Census Bureau (2025 American Community Survey)</i>",
+        "ChoiceOrder": [],
+        "Validation": {
+          "Settings": {
+            "Type": "None"
+          }
+        },
+        "GradingData": [],
+        "Language": [],
+        "NextChoiceId": 4,
+        "NextAnswerId": 1,
+        "QuestionID": "QID28"
+      }
+    },
+    {
+      "SurveyID": "SV_6g1bkEcLPtkqrt4",
+      "Element": "STAT",
+      "PrimaryAttribute": "Survey Statistics",
+      "SecondaryAttribute": null,
+      "TertiaryAttribute": null,
+      "Payload": {
+        "MobileCompatible": true,
+        "ID": "Survey Statistics"
+      }
+    }
+  ]
+}
