@@ -22,6 +22,12 @@ pytest tests/e2e                    # CLI end-to-end tests
 pytest -k "expression"              # match by name
 ```
 
+If `pytest` is not on your `PATH`, run the venv-local binary instead:
+
+```bash
+.venv/bin/pytest
+```
+
 Target coverage is >85% overall, >95% on converters/ and models/.
 
 ## Lint and type-check

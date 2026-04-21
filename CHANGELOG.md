@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Shared conversion pipeline**: `pipeline.py` now centralizes format detection, preflight conversion, output/report path resolution, safe-write checks, and typed readiness results so the standard CLI and guided wizard share one execution path.
+- **Guided wizard**: new `surveywizard wizard` command for interactive file-type selection, target selection, output-path confirmation, preflight review, and overwrite confirmation.
+- **Preflight preview**: `surveywizard info --preview-to ...` now runs an in-memory conversion preview and reports estimated output shape, warning/error counts, top issue categories, and overwrite risk.
+- **Structured JSON reports**: `report.py` now emits machine-readable JSON with severity counts, stable category IDs, recommended action, and per-item detail.
+
+### Changed
+
+- **Safer writes by default**: `convert` now refuses to overwrite existing outputs/reports unless `--force` is provided.
+- **Auto-written issue reports**: when warnings or errors are detected, `convert` now writes a default sidecar Markdown report even if `--report` was omitted.
+- **Inline CLI issue summaries**: `convert`, `info --preview-to`, and `wizard` now surface likely sticking points in the terminal instead of requiring users to open the report first.
+- **Qualtrics flow reporting**: unsupported flow nodes such as `WebService`, `EmbeddedData`, `Branch`, `BlockRandomizer`, and `EndSurvey` are now explicitly reported during Qualtrics → REDCap conversion.
+
 - **Matrix question expansion**: Qualtrics Matrix questions with N rows × M columns now expand into N REDCap fields sharing a matrix_group_name + shared codelist. Likert/SingleAnswer → radio, Likert/MultipleAnswer → checkbox, TE/Profile/FORM → text. The first row receives the original question text as its section header so the grouping is visible on import. Surfaced by team_skills.qsf (8 Matrix questions × 13 rows each = 104 new rows) and productivity_experiment.qsf (14 Matrix questions).
 - **TE + FORM** (multi–text-entry form): Expands to one REDCap field per row, sharing a matrix group, matching Matrix/TE text behavior (productivity_experiment.qsf).
 - **SBS + SBSMatrix**: When `AdditionalQuestions` holds embedded Matrix columns, expands into one REDCap matrix group per column (rows from each column’s Matrix `Choices`). Unparseable side-by-side still falls back to a single text field with a warning (better_sample.qsf).

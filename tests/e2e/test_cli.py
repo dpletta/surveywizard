@@ -64,6 +64,19 @@ class TestInfo:
         payload = json.loads(result.stdout)
         assert payload["field_count"] == 50
 
+    def test_info_preview_json(
+        self, runner: CliRunner, qualtrics_fixtures: Path
+    ) -> None:
+        conjoint = qualtrics_fixtures / "conjoint.qsf"
+        result = runner.invoke(
+            app, ["info", str(conjoint), "-f", "json", "--preview-to", "redcap"]
+        )
+        assert result.exit_code == 0
+        payload = json.loads(result.stdout)
+        assert payload["preview"]["target_format"] == "redcap"
+        assert payload["preview"]["report_counts"]["warning"] >= 1
+        assert payload["preview"]["overwrite_risk"]["requires_force"] is False
+
 
 class TestConvert:
     def test_redcap_to_qualtrics(
@@ -104,15 +117,65 @@ class TestConvert:
         assert '<ODM' in content
         assert 'xmlns:redcap="https://projectredcap.org"' in content
 
+    def test_auto_report_written_for_problematic_conversion(
+        self, runner: CliRunner, qualtrics_fixtures: Path, tmp_path: Path
+    ) -> None:
+        conjoint = qualtrics_fixtures / "conjoint.qsf"
+        out_path = tmp_path / "out.xml"
+        result = runner.invoke(app, ["convert", str(conjoint), "-o", str(out_path)])
+        assert result.exit_code == 0
+        auto_report = tmp_path / "out.report.md"
+        assert auto_report.exists()
+        assert "flow node ignored" in auto_report.read_text(encoding="utf-8")
+
+    def test_existing_output_requires_force(
+        self, runner: CliRunner, redcap_example_xml: Path, tmp_path: Path
+    ) -> None:
+        out_path = tmp_path / "out.qsf"
+        out_path.write_text("placeholder", encoding="utf-8")
+        result = runner.invoke(
+            app,
+            ["convert", str(redcap_example_xml), "-o", str(out_path), "--seed", "7"],
+        )
+        assert result.exit_code == 3
+        assert "already exists" in (result.stdout + (result.stderr or ""))
+        assert out_path.read_text(encoding="utf-8") == "placeholder"
+
+    def test_force_overwrites_existing_output(
+        self, runner: CliRunner, redcap_example_xml: Path, tmp_path: Path
+    ) -> None:
+        out_path = tmp_path / "out.qsf"
+        out_path.write_text("placeholder", encoding="utf-8")
+        result = runner.invoke(
+            app,
+            ["convert", str(redcap_example_xml), "-o", str(out_path), "--seed", "7", "--force"],
+        )
+        assert result.exit_code == 0
+        data = json.loads(out_path.read_text(encoding="utf-8"))
+        assert "SurveyEntry" in data
+
     def test_strict_fails_on_warnings(
         self, runner: CliRunner, qualtrics_fixtures: Path, tmp_path: Path
     ) -> None:
-        # conjoint has Meta/Timing question types that our mapper flags
+        # conjoint includes unsupported flow nodes and approximation warnings
         conjoint = qualtrics_fixtures / "conjoint.qsf"
         out_path = tmp_path / "out.xml"
         result = runner.invoke(
             app, ["convert", str(conjoint), "-o", str(out_path), "--strict"]
         )
-        # Strict may exit 0 (no problems) or 2 (problems) depending on the
-        # fixture — just verify the CLI doesn't crash.
-        assert result.exit_code in {0, 2}
+        assert result.exit_code == 2
+
+
+class TestWizard:
+    def test_wizard_happy_path(
+        self, runner: CliRunner, redcap_example_xml: Path, tmp_path: Path
+    ) -> None:
+        out_path = tmp_path / "wizard-out.qsf"
+        result = runner.invoke(
+            app,
+            ["wizard", "-i", str(redcap_example_xml), "-o", str(out_path)],
+            input="1\n2\nn\ny\n",
+        )
+        assert result.exit_code == 0, result.stdout + (result.stderr or "")
+        assert "SurveyWizard Wizard" in result.stdout
+        assert out_path.exists()

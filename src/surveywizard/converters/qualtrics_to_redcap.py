@@ -9,7 +9,7 @@ from typing import Any
 
 from surveywizard.converters.expression_translator import qsf_display_logic_to_redcap
 from surveywizard.converters.field_mapping import lookup_from_qualtrics
-from surveywizard.models.qualtrics import Block, QualtricsSurvey, Question, QuestionType
+from surveywizard.models.qualtrics import Block, FlowNode, QualtricsSurvey, Question, QuestionType
 from surveywizard.models.redcap import (
     RedcapCodeList,
     RedcapCodeListItem,
@@ -73,6 +73,7 @@ class QualtricsToRedcap:
 
         questions = self.survey.questions()
         blocks = self.survey.blocks()
+        self._report_flow_gaps()
 
         # First pass: assign REDCap variable names.
         variable_collisions: set[str] = set()
@@ -180,6 +181,7 @@ class QualtricsToRedcap:
                 f"qsf:{q.QuestionType.value}", f"redcap:{mapping.redcap_field_type.value}",
                 "Descriptive text carried across — visible to respondent but captures no data.",
                 variable,
+                category="descriptive_text",
             )
         if q.QuestionType == QuestionType.SBS:
             self.report.warn(
@@ -187,6 +189,7 @@ class QualtricsToRedcap:
                 "Qualtrics side-by-side collapsed to a single REDCap text field — "
                 "reconstruct manually as a matrix group post-import.",
                 variable,
+                category="side_by_side_fallback",
             )
         if q.QuestionType in {QuestionType.HL, QuestionType.HOTSPOT, QuestionType.DRAW}:
             self.report.warn(
@@ -194,6 +197,7 @@ class QualtricsToRedcap:
                 "Qualtrics graphical question type has no REDCap equivalent — "
                 "emitted as text for manual replacement.",
                 variable,
+                category="graphical_question_fallback",
             )
 
         self._question_id_to_oids[q.QuestionID] = [field.oid]
@@ -310,6 +314,7 @@ class QualtricsToRedcap:
                 f"Expanded Matrix into {len(fields)} row fields sharing matrix group "
                 f"{matrix_group!r}" + (f" and codelist {shared_code_list.oid!r}" if shared_code_list else "") + ".",
                 base_variable,
+                category="matrix_expansion",
             )
 
         return fields, ([shared_code_list] if shared_code_list else [])
@@ -334,6 +339,7 @@ class QualtricsToRedcap:
                     "qsf:SBS", "redcap:unknown",
                     f"SBS AdditionalQuestions[{ck!r}] is not Matrix; skipped.",
                     base_variable,
+                    category="side_by_side_fallback",
                 )
                 continue
             if col_idx == 1:
@@ -378,6 +384,7 @@ class QualtricsToRedcap:
             "qsf:SBS/SBSMatrix", "redcap:matrix",
             f"Expanded side-by-side into {len(all_fields)} fields across {len(keys)} column matrix groups.",
             base_variable,
+            category="side_by_side_expansion",
         )
         return all_fields, all_lists
 
@@ -410,6 +417,7 @@ class QualtricsToRedcap:
             f"qsf:{q.QuestionType.value}", f"redcap:{mapping.redcap_field_type.value}",
             "Qualtrics side-by-side could not be expanded — emitted as a single REDCap text field.",
             base_variable,
+            category="side_by_side_fallback",
         )
         self._question_id_to_oids[q.QuestionID] = [field.oid]
         return [field], []
@@ -480,6 +488,7 @@ class QualtricsToRedcap:
             "qsf:TE/FORM", f"redcap:{mapping.redcap_field_type.value}",
             f"Expanded TE+FORM into {len(fields)} text fields sharing matrix group {matrix_group!r}.",
             base_variable,
+            category="form_expansion",
         )
 
         self._question_id_to_oids[q.QuestionID] = [f.oid for f in fields]
@@ -517,6 +526,7 @@ class QualtricsToRedcap:
                 "Qualtrics CustomValidation logic was not translated to REDCap (unsupported "
                 "or empty); review field after import.",
                 variable,
+                category="custom_validation_fallback",
             )
             return existing
         self.report.info(
@@ -524,6 +534,7 @@ class QualtricsToRedcap:
             "Merged CustomValidation.Logic into branching_logic as an approximation; "
             "REDCap cannot enforce custom error messages from Qualtrics.",
             variable,
+            category="custom_validation_merge",
         )
         if existing and translated:
             return f"({existing}) and ({translated})"
@@ -630,6 +641,63 @@ class QualtricsToRedcap:
 
         return instruments, item_groups
 
+    def _report_flow_gaps(self) -> None:
+        flow = self.survey.flow()
+        if flow is None:
+            return
+
+        counts: dict[str, int] = {}
+
+        def walk(node: FlowNode) -> None:
+            counts[node.Type] = counts.get(node.Type, 0) + 1
+            for child in node.Flow:
+                walk(child)
+
+        walk(flow)
+        supported = {"Root", "Block", "Standard"}
+        messages = {
+            "Branch": (
+                "Qualtrics flow-level Branch nodes do not map cleanly to REDCap event/form "
+                "structure and were ignored."
+            ),
+            "EmbeddedData": (
+                "Qualtrics EmbeddedData flow nodes were ignored; REDCap cannot preserve flow-only "
+                "embedded data fields."
+            ),
+            "WebService": (
+                "Qualtrics WebService flow nodes were dropped; REDCap has no WebService flow equivalent."
+            ),
+            "BlockRandomizer": (
+                "Qualtrics block randomization was ignored; REDCap imports a fixed instrument order."
+            ),
+            "Randomizer": (
+                "Qualtrics randomizer flow nodes were ignored; REDCap imports a fixed instrument order."
+            ),
+            "EndSurvey": (
+                "Qualtrics EndSurvey flow branches were ignored; REDCap has no equivalent flow action."
+            ),
+            "Authenticator": (
+                "Qualtrics Authenticator flow nodes were dropped; REDCap has no equivalent flow action."
+            ),
+            "TableOfContents": (
+                "Qualtrics TableOfContents flow nodes were dropped; REDCap has no equivalent survey shell."
+            ),
+        }
+        for node_type, count in sorted(counts.items()):
+            if node_type in supported:
+                continue
+            detail = messages.get(
+                node_type,
+                f"Qualtrics flow node type {node_type!r} is not modeled in REDCap and was ignored.",
+            )
+            self.report.warn(
+                "qsf:flow",
+                "redcap:events",
+                f"{detail} ({count} node{'s' if count != 1 else ''}).",
+                self.survey.SurveyEntry.SurveyID,
+                category="flow_node_ignored",
+            )
+
     @staticmethod
     def _build_default_event(instruments: list[RedcapInstrument]) -> list[RedcapEvent]:
         """One synthesized event that includes every instrument in order."""
@@ -654,6 +722,7 @@ def convert_qualtrics_to_redcap(survey: QualtricsSurvey) -> tuple[RedcapProject,
             "qsf:survey", "redcap:project",
             f"Converted {len(survey.questions())} Qualtrics questions into "
             f"{len(project.fields)} REDCap fields with no degradations.",
+            category="conversion_summary",
         )
     return project, c.report
 

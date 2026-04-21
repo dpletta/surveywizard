@@ -22,8 +22,16 @@ that lists every degradation.
 - **Best-effort approximation with a report**: fields without a clean 1:1 mapping (e.g.
   REDCap `calc`, Qualtrics `WebService` flows) are translated where possible and
   every degradation is listed in a sidecar `.report.md`.
+- **Guided conversion wizard**: `surveywizard wizard` walks users through file type
+  selection, target format, output path, overwrite confirmation, and a preflight
+  review before writing anything.
+- **Preflight compatibility preview**: `surveywizard info --preview-to ...` runs an
+  in-memory conversion and surfaces likely sticking points, estimated output shape,
+  and overwrite risk before the real conversion.
 - **Strict mode for CI**: `--strict` exits non-zero when any warning or error is
   reported, so you never silently ship a lossy conversion.
+- **Safer output handling**: existing outputs are protected by default; use `--force`
+  when you intentionally want to overwrite a file.
 - **No surprises on unknown keys**: Pydantic's `extra="allow"` preserves Qualtrics
   internal fields (`NextChoiceId`, `GradingData`, custom `Conjuction` logic) verbatim
   across round-trips.
@@ -51,6 +59,12 @@ surveywizard convert study.qsf -o study.xml --report study.report.md
 
 # Preview what would convert
 surveywizard info study.xml
+
+# Preview compatibility before writing anything
+surveywizard info study.xml --preview-to qualtrics
+
+# Guided interactive flow
+surveywizard wizard
 
 # Strict mode for CI
 surveywizard convert study.xml --strict
@@ -82,7 +96,7 @@ See [`docs/field-type-mapping.md`](./docs/field-type-mapping.md) for the full ta
 
 - [Field-type mapping](./docs/field-type-mapping.md) — the authoritative translation table
 - [Branching logic](./docs/branching-logic.md) — REDCap DSL + Qualtrics DisplayLogic round-trip rules
-- [CLI usage](./docs/cli-usage.md) — every flag documented with examples
+- [CLI usage](./docs/cli-usage.md) — commands, wizard flow, preview mode, and examples
 - [Architecture](./docs/architecture.md) — IR design + module boundaries + extension points
 - [Contributing](./CONTRIBUTING.md) — dev setup, testing, release process
 - [Changelog](./CHANGELOG.md)
@@ -115,5 +129,6 @@ Real fixtures in `tests/fixtures/` include:
 ## Project status
 
 Early beta (v0.1.0). Round-trip fidelity on the core types is strong; edge cases on
-exotic REDCap action tags and Qualtrics flow types are flagged in the report for
-manual review. Bug reports welcome — see [CONTRIBUTING.md](./CONTRIBUTING.md).
+exotic REDCap action tags and Qualtrics flow types are now surfaced earlier via
+preflight preview, inline CLI summaries, and sidecar reports for manual review.
+Bug reports welcome — see [CONTRIBUTING.md](./CONTRIBUTING.md).

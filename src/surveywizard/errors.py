@@ -19,5 +19,9 @@ class UnsupportedFieldError(ConversionError):
     """Raised when a field type cannot be mapped and strict mode is enabled."""
 
 
+class PathConflictError(SurveyWizardError):
+    """Raised when an output or report path would clobber an existing file."""
+
+
 class ExpressionError(SurveyWizardError):
     """Raised when branching-logic expressions are malformed or untranslatable."""

@@ -184,6 +184,7 @@ class RedcapToQualtrics:
                 "redcap:code_list", "qsf:Choices",
                 f"CodeList {field.code_list_ref!r} missing — choices left empty.",
                 field.oid,
+                category="missing_codelist",
             )
             return
         choices: dict[str, Choice] = {}
@@ -206,6 +207,7 @@ class RedcapToQualtrics:
                 "redcap:branching", "qsf:DisplayLogic",
                 f"Could not parse branching logic `{field.branching_logic}` — dropped. {err}",
                 field.oid,
+                category="branching_parse_error",
             )
             return
         qid_lookup = self._var_to_qid.get
@@ -220,6 +222,7 @@ class RedcapToQualtrics:
                 f"qsf:{mapping.qualtrics_question_type.value}/{mapping.qualtrics_selector}",
                 mapping.loss,
                 field.oid,
+                category="lossy_field_mapping",
             )
 
     def _field_groups(self) -> list[list[RedcapField]]:
@@ -263,6 +266,7 @@ class RedcapToQualtrics:
                 "redcap:matrix_group", "qsf:Matrix",
                 "Matrix group rows have mixed field types — using the first row's type.",
                 first.oid,
+                category="matrix_mixed_types",
             )
         ft = first.field_type
 
@@ -321,6 +325,7 @@ class RedcapToQualtrics:
                     "redcap:code_list", "qsf:Answers",
                     f"CodeList {cl_ref!r} missing — matrix scale left empty.",
                     first.oid,
+                    category="missing_codelist",
                 )
             else:
                 answers: dict[str, Choice] = {}
@@ -341,6 +346,7 @@ class RedcapToQualtrics:
             "redcap:matrix_group", "qsf:Matrix",
             f"Grouped {len(rows)} REDCap fields into one Matrix question (export tag {export_tag!r}).",
             first.oid,
+            category="matrix_grouping",
         )
         return question
 
@@ -488,7 +494,8 @@ def convert_redcap_to_qualtrics(
     if not c.report.has_problems() and not c.report.items:
         c.report.info("redcap:project", "qsf:survey",
                       f"Converted {len(project.fields)} fields into "
-                      f"{len(survey.questions())} Qualtrics questions with no degradations.")
+                      f"{len(survey.questions())} Qualtrics questions with no degradations.",
+                      category="conversion_summary")
     return survey, c.report
 
 

@@ -34,8 +34,9 @@ SurveyWizard is a three-layer Python library:
 src/surveywizard/
 ├── __init__.py                # __version__
 ├── __main__.py                # python -m surveywizard
-├── cli.py                     # Typer app (convert / validate / info)
+├── cli.py                     # Typer app (convert / validate / info / wizard)
 ├── errors.py                  # exception hierarchy
+├── pipeline.py                # shared preflight + conversion + safe write flow
 ├── report.py                  # Report + Degradation + Markdown renderer
 ├── models/
 │   ├── common.py              # CommonSurvey IR (pivot for future formats)

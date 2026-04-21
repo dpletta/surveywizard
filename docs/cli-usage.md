@@ -32,7 +32,9 @@ surveywizard convert INPUT [OPTIONS]
 - `-o, --output PATH` — destination file. Defaults to sibling with the other extension (`study.xml` → `study.qsf`).
 - `--to [redcap|qualtrics|auto]` — target format. `auto` (default) infers from the input extension.
 - `--strict` — exit non-zero (code 2) if the conversion produces any warning or error. Useful in CI.
-- `--report PATH` — write a sidecar Markdown conversion report to this path. Lists every degradation with the field OID and reason.
+- `--force` — allow overwriting an existing output or report file.
+- `--report PATH` — write a sidecar Markdown conversion report to this path. If omitted, SurveyWizard auto-writes one when warnings or errors are detected.
+- `--report-json PATH` — write the structured JSON report to this path.
 - `--seed N` — seed the Qualtrics ID minter for reproducible output (REDCap → Qualtrics direction only).
 
 ### Examples
@@ -52,6 +54,9 @@ surveywizard convert data.json --to redcap -o data.xml
 
 # Strict mode for CI
 surveywizard convert study.xml --strict
+
+# Overwrite an existing output intentionally
+surveywizard convert study.xml -o /tmp/study.qsf --force
 ```
 
 ### Exit codes
@@ -62,6 +67,32 @@ surveywizard convert study.xml --strict
 | 1 | Parse error — the input is malformed |
 | 2 | `--strict` was set and the conversion produced warnings or errors |
 | 3 | I/O error writing the output file |
+
+## `wizard`
+
+Guided interactive conversion flow for users who prefer a menu-driven interface.
+
+```
+surveywizard wizard [OPTIONS]
+```
+
+Typical flow:
+
+1. Select the source file.
+2. Choose the file type you have.
+3. Choose the file type you want.
+4. Confirm or edit the output path.
+5. Review the preflight summary and likely sticking points.
+6. Confirm overwrite if needed.
+7. Run the conversion.
+
+Useful options:
+
+- `-i, --input PATH` — prefill the source file.
+- `-o, --output PATH` — prefill the output file.
+- `--report PATH` — prefill a Markdown report destination.
+- `--report-json PATH` — also write the JSON report.
+- `--seed N` — seed reproducible REDCap → Qualtrics IDs.
 
 ## `validate`
 
@@ -92,6 +123,8 @@ surveywizard info INPUT [OPTIONS]
 ### Options
 
 - `-f, --format [table|json]` — output format. Default: `table`.
+- `--preview-to [redcap|qualtrics|auto]` — run an in-memory conversion preview and show readiness for that target format.
+- `--seed N` — seed preview IDs for REDCap → Qualtrics previews.
 
 ### Examples
 
@@ -115,11 +148,15 @@ surveywizard info study.xml -f json | jq '.field_types'
 #   "radio": 8,
 #   ...
 # }
+
+surveywizard info study.xml --preview-to qualtrics
+# Shows estimated output shape, warning/error counts, overwrite risk,
+# and the top likely sticking points before conversion.
 ```
 
 ## The conversion report
 
-When `--report PATH` is passed, SurveyWizard writes a Markdown file next to the output describing every field that couldn't be perfectly translated. Example:
+When `--report PATH` is passed, SurveyWizard writes a Markdown file describing every field that couldn't be perfectly translated. If `--report` is omitted, SurveyWizard still auto-writes a default `<output>.report.md` file when warnings or errors are detected. Example:
 
 ```markdown
 # SurveyWizard Conversion Report — redcap→qualtrics
@@ -130,11 +167,11 @@ When `--report PATH` is passed, SurveyWizard writes a Markdown file next to the 
 
 ## Details
 
-| Level   | Field           | From → To                 | Detail                                                      |
-|---------|-----------------|---------------------------|-------------------------------------------------------------|
-| WARNING | `age_group`     | `redcap:calc` → `qsf:DB`  | REDCap calc equations cannot be natively evaluated...       |
-| WARNING | `site_options`  | `redcap:sql` → `qsf:MC`   | REDCap SQL fields pull options from a database at runtime.  |
-| WARNING | `parent_form`   | `redcap:branching` → ...  | Function call `datediff(...)` has no direct equivalent.     |
+| Level   | Category                | Field           | From → To                 | Detail                                                      |
+|---------|-------------------------|-----------------|---------------------------|-------------------------------------------------------------|
+| WARNING | `lossy field mapping`   | `age_group`     | `redcap:calc` → `qsf:DB`  | REDCap calc equations cannot be natively evaluated...       |
+| WARNING | `lossy field mapping`   | `site_options`  | `redcap:sql` → `qsf:MC`   | REDCap SQL fields pull options from a database at runtime.  |
+| WARNING | `unsupported branch...` | `parent_form`   | `redcap:branching` → ...  | Function call `datediff(...)` has no direct equivalent.     |
 ```
 
 Legend:
@@ -144,3 +181,12 @@ Legend:
 - **ERROR** — the field cannot be represented; the importer may drop or misread it.
 
 Under `--strict`, any warning or error causes exit code 2.
+
+## JSON report output
+
+When `--report-json PATH` is used, SurveyWizard writes a structured payload with:
+
+- report counts by severity
+- stable category IDs
+- recommended action (`safe`, `review_report`, `manual_cleanup_needed`)
+- per-item detail for automation or downstream tooling

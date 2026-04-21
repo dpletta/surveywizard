@@ -130,6 +130,7 @@ def _to_expression(
                     f"Variable [{left.name}] referenced in branching logic but not "
                     "present in the output — display condition dropped.",
                     source_field_oid,
+                    category="missing_branch_reference",
                 )
                 return None
 
@@ -155,6 +156,7 @@ def _to_expression(
             f"Function call `{rexpr.render(node)}` has no direct Qualtrics "
             "equivalent — condition dropped. Consider Qualtrics custom JS.",
             source_field_oid,
+            category="unsupported_branch_function",
         )
         return None
 
@@ -162,6 +164,7 @@ def _to_expression(
         "redcap:branching", "qsf:DisplayLogic",
         f"Unsupported expression `{rexpr.render(node)}` — display condition dropped.",
         source_field_oid,
+        category="unsupported_branch_expression",
     )
     return None
 
@@ -249,6 +252,7 @@ def _expression_to_redcap(
             "qsf:DisplayLogic", "redcap:branching",
             f"Unsupported Qualtrics operator {operator!r} — condition dropped.",
             source_field_oid,
+            category="unsupported_display_logic_operator",
         )
         return None
 
@@ -270,6 +274,7 @@ def _expression_to_redcap(
             f"Qualtrics {qid} referenced in DisplayLogic but no matching "
             "REDCap variable — condition dropped.",
             source_field_oid,
+            category="missing_display_logic_reference",
         )
         return None
 
@@ -283,6 +288,7 @@ def _expression_to_redcap(
             f"translated as a presence check on [{variable}] (loses "
             "choice-specific semantic if present).",
             source_field_oid,
+            category="display_semantic_downgrade",
         )
         return f"[{variable}] {rc_op} ''"
 
