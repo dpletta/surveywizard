@@ -23,10 +23,26 @@ class TestVersion:
         assert "surveywizard" in result.stdout
         assert "0.1.0" in result.stdout
 
-    def test_no_args_shows_help(self, runner: CliRunner) -> None:
-        result = runner.invoke(app, [])
-        # Typer exits with 0 or 2 depending on help flow; we just need output
-        assert "Usage" in result.stdout or "Usage" in (result.stderr or "")
+    def test_no_args_launches_wizard(
+        self, runner: CliRunner, redcap_example_xml: Path, tmp_path: Path
+    ) -> None:
+        # Bare invocation now drops into the interactive wizard instead of help.
+        out_path = tmp_path / "bare-wizard-out.qsf"
+        result = runner.invoke(
+            app,
+            [],
+            input=f"{redcap_example_xml}\n1\n2\n{out_path}\nn\ny\n",
+        )
+        assert result.exit_code == 0
+        assert "SurveyWizard Wizard" in result.stdout
+        assert out_path.exists()
+
+    def test_help_flag_still_shows_usage(self, runner: CliRunner) -> None:
+        result = runner.invoke(app, ["--help"])
+        assert result.exit_code == 0
+        assert "Usage" in result.stdout
+        # --help must not hijack into the interactive wizard.
+        assert "SurveyWizard Wizard" not in result.stdout
 
 
 class TestValidate:

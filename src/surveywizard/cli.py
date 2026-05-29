@@ -45,7 +45,6 @@ class OutputFormat(StrEnum):
 app = typer.Typer(
     name="surveywizard",
     help="Bidirectional converter between REDCap XML and Qualtrics QSF.",
-    no_args_is_help=True,
     add_completion=False,
 )
 console = Console()
@@ -77,7 +76,9 @@ def _root(
     ),
 ) -> None:
     if ctx.invoked_subcommand is None and not version:
-        typer.echo(ctx.get_help())
+        # Bare ``surveywizard`` launches the interactive wizard. ``--help`` and
+        # ``--version`` are eager options that exit before reaching this point.
+        _run_wizard()
         raise typer.Exit()
 
 
@@ -487,6 +488,23 @@ def wizard(
     ),
 ) -> None:
     """Guided interactive conversion wizard."""
+    _run_wizard(
+        input_path=input_path,
+        output=output,
+        report=report,
+        report_json=report_json,
+        seed=seed,
+    )
+
+
+def _run_wizard(
+    input_path: Path | None = None,
+    output: Path | None = None,
+    report: Path | None = None,
+    report_json: Path | None = None,
+    seed: int | None = None,
+) -> None:
+    """Run the interactive conversion wizard. Shared by ``wizard`` and bare invocation."""
     console.print(
         Panel.fit(
             "Select the file you have, the format you want, and review likely sticking points "

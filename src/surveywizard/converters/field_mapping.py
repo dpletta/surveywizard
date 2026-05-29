@@ -31,6 +31,7 @@ class FieldMapping:
     qualtrics_sub_selector: str = ""
     qualtrics_content_type: str | None = None
     loss: str | None = None  # non-None means the mapping is approximate
+    reverse_only: bool = False  # only used Qualtrics→REDCap (no REDCap origin shape)
 
 
 # The canonical bidirectional mapping table — each row is a ``FieldMapping``.
@@ -103,6 +104,31 @@ TABLE: list[FieldMapping] = [
                       "emitted with an empty option list for the author to populate."),
     FieldMapping(RedcapFieldType.FILE, RedcapValidationType.NONE,
                  QuestionType.FILE_UPLOAD, ""),
+
+    # Qualtrics-origin shapes with no native REDCap equivalent (reverse-only).
+    # These are never produced by REDCap→Qualtrics, so they are skipped by
+    # ``lookup_from_redcap`` and only resolve via ``lookup_from_qualtrics``.
+    FieldMapping(RedcapFieldType.RADIO, RedcapValidationType.NONE,
+                 QuestionType.RO, "DND",
+                 loss="Qualtrics rank-order has no native REDCap equivalent; emitted as a "
+                      "radio field with the ranked options as choices. Reconstruct the "
+                      "ranking manually (e.g. a matrix-ranking group) post-import.",
+                 reverse_only=True),
+    FieldMapping(RedcapFieldType.TEXT, RedcapValidationType.NONE,
+                 QuestionType.HL, "",
+                 loss="Qualtrics heat-map/highlight question has no REDCap equivalent — "
+                      "emitted as a text field for manual replacement.",
+                 reverse_only=True),
+    FieldMapping(RedcapFieldType.TEXT, RedcapValidationType.NONE,
+                 QuestionType.HOTSPOT, "",
+                 loss="Qualtrics hot-spot question has no REDCap equivalent — "
+                      "emitted as a text field for manual replacement.",
+                 reverse_only=True),
+    FieldMapping(RedcapFieldType.TEXT, RedcapValidationType.NONE,
+                 QuestionType.DRAW, "",
+                 loss="Qualtrics drawing question has no REDCap equivalent — "
+                      "emitted as a text field for manual replacement.",
+                 reverse_only=True),
 ]
 
 
@@ -111,11 +137,16 @@ def lookup_from_redcap(
     validation: RedcapValidationType = RedcapValidationType.NONE,
 ) -> FieldMapping:
     """Return the canonical Qualtrics mapping for a REDCap field shape."""
-    # Exact match preferred; fall back to field_type only.
+    # Exact match preferred; fall back to field_type only. Reverse-only rows
+    # describe Qualtrics-origin shapes and are never emitted from REDCap.
     for row in TABLE:
+        if row.reverse_only:
+            continue
         if row.redcap_field_type == field_type and row.redcap_validation == validation:
             return row
     for row in TABLE:
+        if row.reverse_only:
+            continue
         if row.redcap_field_type == field_type:
             return row
     # Last resort: treat as plain text

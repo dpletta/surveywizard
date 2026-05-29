@@ -120,14 +120,15 @@ class RedcapToQualtrics:
         mapping = lookup_from_redcap(field.field_type, field.validation_type)
         qid = self._var_to_qid[field.variable]
 
+        question_text = self._question_text(field)
         question = Question(
             QuestionID=qid,
-            QuestionText=field.label,
+            QuestionText=question_text,
             DataExportTag=field.variable,
             QuestionType=mapping.qualtrics_question_type,
             Selector=mapping.qualtrics_selector,
             SubSelector=mapping.qualtrics_sub_selector,
-            QuestionDescription=field.label[:255] if field.label else "",
+            QuestionDescription=question_text[:255] if question_text else "",
             Configuration={"QuestionDescriptionOption": "UseText"},
             Validation=self._build_validation(field, mapping),
         )
@@ -137,6 +138,21 @@ class RedcapToQualtrics:
         self._note_lossy_mapping(field, mapping)
 
         return question
+
+    def _question_text(self, field: RedcapField) -> str:
+        """Build the Qualtrics question text, surfacing calc/sql expressions.
+
+        REDCap ``calc``/``sql`` fields have no runtime equivalent in Qualtrics, so
+        the originating expression is appended to the question text for the survey
+        author to translate into piped-text / EmbeddedData (calc) or to repopulate
+        the option list (sql). This is what the field-mapping loss notes promise.
+        """
+        label = field.label or ""
+        if field.field_type == RedcapFieldType.CALC and field.calculation_equation:
+            return f"{label}\n\n[Auto-calculated in REDCap: {field.calculation_equation}]".strip()
+        if field.field_type == RedcapFieldType.SQL and field.sql_query:
+            return f"{label}\n\n[REDCap SQL lookup: {field.sql_query}]".strip()
+        return label
 
     def _build_validation(
         self, field: RedcapField, mapping: FieldMapping

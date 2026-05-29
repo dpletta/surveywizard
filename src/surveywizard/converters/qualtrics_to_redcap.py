@@ -199,6 +199,15 @@ class QualtricsToRedcap:
                 variable,
                 category="graphical_question_fallback",
             )
+        if q.QuestionType == QuestionType.RO:
+            field.matrix_ranking = True
+            self.report.warn(
+                f"qsf:{q.QuestionType.value}", f"redcap:{mapping.redcap_field_type.value}",
+                "Qualtrics rank-order question collapsed to a single REDCap radio field with "
+                "the ranked options as choices — reconstruct the ranking manually post-import.",
+                variable,
+                category="rank_order_fallback",
+            )
 
         self._question_id_to_oids[q.QuestionID] = [field.oid]
         return [field], ([code_list] if code_list else [])
