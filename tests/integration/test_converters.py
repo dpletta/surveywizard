@@ -222,7 +222,8 @@ class TestRedcapToQualtrics:
         )
         survey, _report = convert_redcap_to_qualtrics(project, seed=1)
         q = survey.questions()[0]
-        assert equation in q.QuestionText
+        import html
+        assert html.escape(equation) in q.QuestionText
 
     def test_sql_query_carried_into_question_text(self) -> None:
         from surveywizard.models.redcap import (
