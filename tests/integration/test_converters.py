@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import html
 from pathlib import Path
 
 import pytest
@@ -199,7 +200,7 @@ class TestRedcapToQualtrics:
             RedcapProject,
         )
 
-        equation = "if([age] >= 65, 'senior', 'adult')"
+        equation = "if([score] < 5 & [age] >= 65, 'senior', 'adult')"
         project = RedcapProject(
             file_oid="test",
             creation_datetime="2026-04-21T00:00:00",
@@ -222,8 +223,10 @@ class TestRedcapToQualtrics:
         )
         survey, _report = convert_redcap_to_qualtrics(project, seed=1)
         q = survey.questions()[0]
-        import html
-        assert html.escape(equation) in q.QuestionText
+        assert (
+            q.QuestionText
+            == f"Age group<br><br>[Auto-calculated in REDCap: {html.escape(equation)}]"
+        )
 
     def test_sql_query_carried_into_question_text(self) -> None:
         from surveywizard.models.redcap import (
@@ -234,7 +237,7 @@ class TestRedcapToQualtrics:
             RedcapProject,
         )
 
-        query = "select record_id, name from redcap_data"
+        query = "select record_id, name from redcap_data where name <> '' and active & 1 = 1"
         project = RedcapProject(
             file_oid="test",
             creation_datetime="2026-04-21T00:00:00",
@@ -257,7 +260,7 @@ class TestRedcapToQualtrics:
         )
         survey, _report = convert_redcap_to_qualtrics(project, seed=1)
         q = survey.questions()[0]
-        assert query in q.QuestionText
+        assert q.QuestionText == f"Pick a record<br><br>[REDCap SQL lookup: {html.escape(query)}]"
 
     def test_branching_logic_becomes_display_logic(self) -> None:
         from surveywizard.models.redcap import (

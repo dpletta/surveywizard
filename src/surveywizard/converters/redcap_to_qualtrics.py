@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import contextlib
+import html
 from datetime import UTC, datetime
 from typing import Any
 
@@ -156,9 +157,13 @@ class RedcapToQualtrics:
         """
         label = field.label or ""
         if field.field_type == RedcapFieldType.CALC and field.calculation_equation:
-            return f"{label}\n\n[Auto-calculated in REDCap: {field.calculation_equation}]".strip()
+            source_note = (
+                f"[Auto-calculated in REDCap: {html.escape(field.calculation_equation)}]"
+            )
+            return f"{label}<br><br>{source_note}" if label else source_note
         if field.field_type == RedcapFieldType.SQL and field.sql_query:
-            return f"{label}\n\n[REDCap SQL lookup: {field.sql_query}]".strip()
+            source_note = f"[REDCap SQL lookup: {html.escape(field.sql_query)}]"
+            return f"{label}<br><br>{source_note}" if label else source_note
         return label
 
     def _build_validation(self, field: RedcapField, mapping: FieldMapping) -> QuestionValidation:
