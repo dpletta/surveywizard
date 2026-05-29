@@ -161,9 +161,7 @@ def _parse_instruments(metadata: etree._Element) -> list[RedcapInstrument]:
                 oid=fd.get("OID", ""),
                 name=fd.get(rc_attr("FormName")) or fd.get("Name") or "",
                 title=(
-                    _translated_text(fd.find("odm:Description", NAMESPACES))
-                    or fd.get("Name")
-                    or ""
+                    _translated_text(fd.find("odm:Description", NAMESPACES)) or fd.get("Name") or ""
                 ),
                 repeating=fd.get("Repeating", "No") == "Yes",
                 item_group_oids=item_group_refs,

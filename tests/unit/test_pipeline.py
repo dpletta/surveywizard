@@ -11,9 +11,7 @@ from surveywizard.pipeline import SurveyFormat, preflight_conversion, write_conv
 
 
 class TestPreflightConversion:
-    def test_redcap_fixture_defaults(
-        self, redcap_example_xml: Path
-    ) -> None:
+    def test_redcap_fixture_defaults(self, redcap_example_xml: Path) -> None:
         preflight = preflight_conversion(redcap_example_xml, seed=42)
 
         assert preflight.source_format == SurveyFormat.REDCAP

@@ -64,10 +64,18 @@ _QSF_OP_TO_RC_OP = {
 # Operators whose semantic is "was a specific choice *displayed*" — we
 # translate by dropping the choice-specific part (REDCap can't distinguish
 # "choice k was displayed" from "the question was answered").
-_DISPLAY_SEMANTIC_OPS = frozenset({
-    "Displayed", "NotDisplayed", "IsEmpty", "IsNotEmpty",
-    "Answered", "NotAnswered", "Skipped", "NotSkipped",
-})
+_DISPLAY_SEMANTIC_OPS = frozenset(
+    {
+        "Displayed",
+        "NotDisplayed",
+        "IsEmpty",
+        "IsNotEmpty",
+        "Answered",
+        "NotAnswered",
+        "Skipped",
+        "NotSkipped",
+    }
+)
 
 
 def _flatten_or(node: rexpr.Node) -> list[rexpr.Node]:
@@ -80,7 +88,9 @@ def _flatten_or(node: rexpr.Node) -> list[rexpr.Node]:
 def _flatten_and(node: rexpr.Node) -> list[rexpr.Node]:
     """Split an AND-joined tree into a flat list of conjuncts."""
     if isinstance(node, rexpr.LogicalOp) and node.op == "and":
-        return _flatten_and(node.left) + _flatten_and(node.right) if node.left and node.right else []
+        return (
+            _flatten_and(node.left) + _flatten_and(node.right) if node.left and node.right else []
+        )
     return [node]
 
 
@@ -126,7 +136,8 @@ def _to_expression(
             qid = qid_lookup(left.name)
             if qid is None:
                 report.warn(
-                    "redcap:branching", "qsf:DisplayLogic",
+                    "redcap:branching",
+                    "qsf:DisplayLogic",
                     f"Variable [{left.name}] referenced in branching logic but not "
                     "present in the output — display condition dropped.",
                     source_field_oid,
@@ -147,12 +158,16 @@ def _to_expression(
 
             op_cmp = cast(qlogic.Operator, _RC_OP_TO_QSF_OP[node.op])
             return qlogic.question_expression(
-                qid, op_cmp, right_operand=right_value, choice_code=None,
+                qid,
+                op_cmp,
+                right_operand=right_value,
+                choice_code=None,
             )
 
     if isinstance(node, rexpr.FunctionCall):
         report.warn(
-            "redcap:branching", "qsf:DisplayLogic",
+            "redcap:branching",
+            "qsf:DisplayLogic",
             f"Function call `{rexpr.render(node)}` has no direct Qualtrics "
             "equivalent — condition dropped. Consider Qualtrics custom JS.",
             source_field_oid,
@@ -161,7 +176,8 @@ def _to_expression(
         return None
 
     report.warn(
-        "redcap:branching", "qsf:DisplayLogic",
+        "redcap:branching",
+        "qsf:DisplayLogic",
         f"Unsupported expression `{rexpr.render(node)}` — display condition dropped.",
         source_field_oid,
         category="unsupported_branch_expression",
@@ -249,7 +265,8 @@ def _expression_to_redcap(
 
     if not operator or operator not in _QSF_OP_TO_RC_OP:
         report.warn(
-            "qsf:DisplayLogic", "redcap:branching",
+            "qsf:DisplayLogic",
+            "redcap:branching",
             f"Unsupported Qualtrics operator {operator!r} — condition dropped.",
             source_field_oid,
             category="unsupported_display_logic_operator",
@@ -270,7 +287,8 @@ def _expression_to_redcap(
     variable = var_lookup(qid)
     if variable is None:
         report.warn(
-            "qsf:DisplayLogic", "redcap:branching",
+            "qsf:DisplayLogic",
+            "redcap:branching",
             f"Qualtrics {qid} referenced in DisplayLogic but no matching "
             "REDCap variable — condition dropped.",
             source_field_oid,
@@ -283,7 +301,8 @@ def _expression_to_redcap(
     # the loss in the report.
     if operator in _DISPLAY_SEMANTIC_OPS:
         report.info(
-            "qsf:DisplayLogic", "redcap:branching",
+            "qsf:DisplayLogic",
+            "redcap:branching",
             f"Qualtrics {operator!r} has no exact REDCap equivalent — "
             f"translated as a presence check on [{variable}] (loses "
             "choice-specific semantic if present).",

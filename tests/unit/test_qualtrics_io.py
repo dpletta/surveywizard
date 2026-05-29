@@ -42,8 +42,11 @@ MINIMAL_QSF = {
             "SurveyID": "SV_abc123",
             "Element": "FL",
             "PrimaryAttribute": "Survey Flow",
-            "Payload": {"Type": "Root", "FlowID": "FL_1",
-                        "Flow": [{"Type": "Standard", "ID": "BL_block1", "FlowID": "FL_2"}]},
+            "Payload": {
+                "Type": "Root",
+                "FlowID": "FL_1",
+                "Flow": [{"Type": "Standard", "ID": "BL_block1", "FlowID": "FL_2"}],
+            },
         },
         {
             "SurveyID": "SV_abc123",

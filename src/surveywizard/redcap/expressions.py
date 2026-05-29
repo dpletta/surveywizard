@@ -274,9 +274,7 @@ class _Parser:
         node = self.parse_or()
         if self.peek().kind != TokenKind.EOF:
             leftover = self.peek()
-            raise ExpressionError(
-                f"Trailing tokens at pos {leftover.pos}: {leftover.value!r}"
-            )
+            raise ExpressionError(f"Trailing tokens at pos {leftover.pos}: {leftover.value!r}")
         return node
 
     def parse_or(self) -> Node:
@@ -295,8 +293,14 @@ class _Parser:
             left = LogicalOp(op=op_tok.value.lower(), left=left, right=right)
         return left
 
-    _CMP_TOKENS = {TokenKind.EQ, TokenKind.NE, TokenKind.LT, TokenKind.LE,
-                   TokenKind.GT, TokenKind.GE}
+    _CMP_TOKENS = {
+        TokenKind.EQ,
+        TokenKind.NE,
+        TokenKind.LT,
+        TokenKind.LE,
+        TokenKind.GT,
+        TokenKind.GE,
+    }
     _CMP_OP_TEXT = {
         TokenKind.EQ: "=",
         TokenKind.NE: "<>",
@@ -460,24 +464,36 @@ def render(node: Node) -> str:
 def to_dict(node: Node) -> dict[str, Any]:
     """Serialize an AST node to a JSON-friendly dict (for the Branching model)."""
     if isinstance(node, FieldRef):
-        return {"kind": "FieldRef", "name": node.name, "event": node.event,
-                "option_code": node.option_code}
+        return {
+            "kind": "FieldRef",
+            "name": node.name,
+            "event": node.event,
+            "option_code": node.option_code,
+        }
     if isinstance(node, Literal):
         return {"kind": "Literal", "value": node.value, "literal_kind": node.literal_kind}
     if isinstance(node, UnaryOp):
-        return {"kind": "UnaryOp", "op": node.op,
-                "operand": to_dict(node.operand) if node.operand else None}
+        return {
+            "kind": "UnaryOp",
+            "op": node.op,
+            "operand": to_dict(node.operand) if node.operand else None,
+        }
     if isinstance(node, BinaryOp):
-        return {"kind": "BinaryOp", "op": node.op,
-                "left": to_dict(node.left) if node.left else None,
-                "right": to_dict(node.right) if node.right else None}
+        return {
+            "kind": "BinaryOp",
+            "op": node.op,
+            "left": to_dict(node.left) if node.left else None,
+            "right": to_dict(node.right) if node.right else None,
+        }
     if isinstance(node, LogicalOp):
-        return {"kind": "LogicalOp", "op": node.op,
-                "left": to_dict(node.left) if node.left else None,
-                "right": to_dict(node.right) if node.right else None}
+        return {
+            "kind": "LogicalOp",
+            "op": node.op,
+            "left": to_dict(node.left) if node.left else None,
+            "right": to_dict(node.right) if node.right else None,
+        }
     if isinstance(node, FunctionCall):
-        return {"kind": "FunctionCall", "name": node.name,
-                "args": [to_dict(a) for a in node.args]}
+        return {"kind": "FunctionCall", "name": node.name, "args": [to_dict(a) for a in node.args]}
     raise ExpressionError(f"Cannot serialize node: {node!r}")
 
 
@@ -485,8 +501,9 @@ def from_dict(data: dict[str, Any]) -> Node:
     """Deserialize a dict produced by ``to_dict`` back into an AST."""
     kind = data.get("kind")
     if kind == "FieldRef":
-        return FieldRef(name=data["name"], event=data.get("event"),
-                        option_code=data.get("option_code"))
+        return FieldRef(
+            name=data["name"], event=data.get("event"), option_code=data.get("option_code")
+        )
     if kind == "Literal":
         return Literal(value=data["value"], literal_kind=data.get("literal_kind", "string"))
     if kind == "UnaryOp":

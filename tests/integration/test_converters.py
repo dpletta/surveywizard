@@ -28,8 +28,11 @@ class TestFieldMappingLookups:
 
     def test_qualtrics_side_mc_savr(self) -> None:
         row = lookup_from_qualtrics(QuestionType.MC, "SAVR")
-        assert row.redcap_field_type in {RedcapFieldType.RADIO, RedcapFieldType.YESNO,
-                                           RedcapFieldType.TRUEFALSE}
+        assert row.redcap_field_type in {
+            RedcapFieldType.RADIO,
+            RedcapFieldType.YESNO,
+            RedcapFieldType.TRUEFALSE,
+        }
 
     def test_qualtrics_te_with_email(self) -> None:
         row = lookup_from_qualtrics(QuestionType.TE, "SL", content_type="ValidEmailAddress")
@@ -49,9 +52,7 @@ class TestFieldMappingLookups:
         row = lookup_from_redcap(RedcapFieldType.RADIO, RedcapValidationType.NONE)
         assert row.qualtrics_question_type == QuestionType.MC
 
-    @pytest.mark.parametrize(
-        "qtype", [QuestionType.HL, QuestionType.HOTSPOT, QuestionType.DRAW]
-    )
+    @pytest.mark.parametrize("qtype", [QuestionType.HL, QuestionType.HOTSPOT, QuestionType.DRAW])
     def test_graphical_types_map_to_text_with_loss(self, qtype) -> None:
         row = lookup_from_qualtrics(qtype)
         assert row.redcap_field_type == RedcapFieldType.TEXT
@@ -133,12 +134,19 @@ class TestRedcapToQualtrics:
             file_oid="test",
             creation_datetime="2026-04-21T00:00:00",
             globals=RedcapGlobalVariables(study_name="Test"),
-            instruments=[RedcapInstrument(oid="Form.a", name="a", title="Form A",
-                                           item_group_oids=["Group.a"])],
+            instruments=[
+                RedcapInstrument(
+                    oid="Form.a", name="a", title="Form A", item_group_oids=["Group.a"]
+                )
+            ],
             item_groups=[RedcapItemGroup(oid="Group.a", name="a", item_oids=["consent"])],
             fields=[
-                RedcapField(oid="consent", variable="consent",
-                            field_type=RedcapFieldType.YESNO, label="Consent?")
+                RedcapField(
+                    oid="consent",
+                    variable="consent",
+                    field_type=RedcapFieldType.YESNO,
+                    label="Consent?",
+                )
             ],
         )
         survey, _report = convert_redcap_to_qualtrics(project, seed=1)
@@ -161,14 +169,20 @@ class TestRedcapToQualtrics:
             file_oid="test",
             creation_datetime="2026-04-21T00:00:00",
             globals=RedcapGlobalVariables(study_name="Test"),
-            instruments=[RedcapInstrument(oid="Form.a", name="a", title="Form A",
-                                           item_group_oids=["Group.a"])],
+            instruments=[
+                RedcapInstrument(
+                    oid="Form.a", name="a", title="Form A", item_group_oids=["Group.a"]
+                )
+            ],
             item_groups=[RedcapItemGroup(oid="Group.a", name="a", item_oids=["age_group"])],
             fields=[
-                RedcapField(oid="age_group", variable="age_group",
-                            field_type=RedcapFieldType.CALC,
-                            label="Age group",
-                            calculation_equation="if([age] >= 65, 'senior', 'adult')")
+                RedcapField(
+                    oid="age_group",
+                    variable="age_group",
+                    field_type=RedcapFieldType.CALC,
+                    label="Age group",
+                    calculation_equation="if([age] >= 65, 'senior', 'adult')",
+                )
             ],
         )
         _survey, report = convert_redcap_to_qualtrics(project)
@@ -190,14 +204,20 @@ class TestRedcapToQualtrics:
             file_oid="test",
             creation_datetime="2026-04-21T00:00:00",
             globals=RedcapGlobalVariables(study_name="Test"),
-            instruments=[RedcapInstrument(oid="Form.a", name="a", title="Form A",
-                                           item_group_oids=["Group.a"])],
+            instruments=[
+                RedcapInstrument(
+                    oid="Form.a", name="a", title="Form A", item_group_oids=["Group.a"]
+                )
+            ],
             item_groups=[RedcapItemGroup(oid="Group.a", name="a", item_oids=["age_group"])],
             fields=[
-                RedcapField(oid="age_group", variable="age_group",
-                            field_type=RedcapFieldType.CALC,
-                            label="Age group",
-                            calculation_equation=equation)
+                RedcapField(
+                    oid="age_group",
+                    variable="age_group",
+                    field_type=RedcapFieldType.CALC,
+                    label="Age group",
+                    calculation_equation=equation,
+                )
             ],
         )
         survey, _report = convert_redcap_to_qualtrics(project, seed=1)
@@ -218,14 +238,20 @@ class TestRedcapToQualtrics:
             file_oid="test",
             creation_datetime="2026-04-21T00:00:00",
             globals=RedcapGlobalVariables(study_name="Test"),
-            instruments=[RedcapInstrument(oid="Form.a", name="a", title="Form A",
-                                           item_group_oids=["Group.a"])],
+            instruments=[
+                RedcapInstrument(
+                    oid="Form.a", name="a", title="Form A", item_group_oids=["Group.a"]
+                )
+            ],
             item_groups=[RedcapItemGroup(oid="Group.a", name="a", item_oids=["lookup"])],
             fields=[
-                RedcapField(oid="lookup", variable="lookup",
-                            field_type=RedcapFieldType.SQL,
-                            label="Pick a record",
-                            sql_query=query)
+                RedcapField(
+                    oid="lookup",
+                    variable="lookup",
+                    field_type=RedcapFieldType.SQL,
+                    label="Pick a record",
+                    sql_query=query,
+                )
             ],
         )
         survey, _report = convert_redcap_to_qualtrics(project, seed=1)
@@ -245,16 +271,25 @@ class TestRedcapToQualtrics:
             file_oid="test",
             creation_datetime="2026-04-21T00:00:00",
             globals=RedcapGlobalVariables(study_name="Test"),
-            instruments=[RedcapInstrument(oid="Form.a", name="a", title="A",
-                                           item_group_oids=["Group.a"])],
-            item_groups=[RedcapItemGroup(oid="Group.a", name="a",
-                                          item_oids=["age", "pregnant"])],
+            instruments=[
+                RedcapInstrument(oid="Form.a", name="a", title="A", item_group_oids=["Group.a"])
+            ],
+            item_groups=[RedcapItemGroup(oid="Group.a", name="a", item_oids=["age", "pregnant"])],
             fields=[
-                RedcapField(oid="age", variable="age", field_type=RedcapFieldType.TEXT,
-                            validation_type=RedcapValidationType.INT, label="Age"),
-                RedcapField(oid="pregnant", variable="pregnant",
-                            field_type=RedcapFieldType.YESNO, label="Pregnant?",
-                            branching_logic="[age] >= 18"),
+                RedcapField(
+                    oid="age",
+                    variable="age",
+                    field_type=RedcapFieldType.TEXT,
+                    validation_type=RedcapValidationType.INT,
+                    label="Age",
+                ),
+                RedcapField(
+                    oid="pregnant",
+                    variable="pregnant",
+                    field_type=RedcapFieldType.YESNO,
+                    label="Pregnant?",
+                    branching_logic="[age] >= 18",
+                ),
             ],
         )
         survey, _report = convert_redcap_to_qualtrics(project, seed=7)

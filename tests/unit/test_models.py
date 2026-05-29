@@ -62,8 +62,12 @@ class TestCommonIR:
 
     def test_instrument_nesting(self) -> None:
         f1 = Field(oid="q1", label="Q1", field_type=CommonFieldType.TEXT)
-        f2 = Field(oid="q2", label="Q2", field_type=CommonFieldType.RADIO,
-                   choices=[Choice(code="1", label="Yes"), Choice(code="0", label="No")])
+        f2 = Field(
+            oid="q2",
+            label="Q2",
+            field_type=CommonFieldType.RADIO,
+            choices=[Choice(code="1", label="Yes"), Choice(code="0", label="No")],
+        )
         sect = Section(name="Demographics", fields=[f1, f2])
         inst = Instrument(name="demo", title="Demographics", sections=[sect])
         survey = CommonSurvey(meta=SurveyMeta(title="S"), instruments=[inst])
@@ -72,12 +76,14 @@ class TestCommonIR:
 
     def test_preserves_unknown_keys(self) -> None:
         """`extra='allow'` lets unknown keys round-trip."""
-        f = Field.model_validate({
-            "oid": "q1",
-            "label": "Q1",
-            "field_type": "text",
-            "custom_future_field": "xyz",
-        })
+        f = Field.model_validate(
+            {
+                "oid": "q1",
+                "label": "Q1",
+                "field_type": "text",
+                "custom_future_field": "xyz",
+            }
+        )
         assert f.model_dump()["custom_future_field"] == "xyz"
 
     def test_event_defaults(self) -> None:
@@ -153,13 +159,15 @@ class TestRedcapModels:
 
     def test_extra_fields_allowed(self) -> None:
         """REDCap exports may have attributes we haven't modeled yet."""
-        f = RedcapField.model_validate({
-            "oid": "x",
-            "variable": "x",
-            "field_type": "text",
-            "label": "x",
-            "some_new_redcap_attr": "preserve me",
-        })
+        f = RedcapField.model_validate(
+            {
+                "oid": "x",
+                "variable": "x",
+                "field_type": "text",
+                "label": "x",
+                "some_new_redcap_attr": "preserve me",
+            }
+        )
         assert f.model_dump()["some_new_redcap_attr"] == "preserve me"
 
 
@@ -257,9 +265,20 @@ class TestEnumCoverage:
     """Verify enum coverage matches the spec field-mapping table."""
 
     def test_all_redcap_field_types(self) -> None:
-        expected = {"text", "textarea", "radio", "select", "checkbox",
-                    "yesno", "truefalse", "slider", "descriptive",
-                    "calc", "file", "sql"}
+        expected = {
+            "text",
+            "textarea",
+            "radio",
+            "select",
+            "checkbox",
+            "yesno",
+            "truefalse",
+            "slider",
+            "descriptive",
+            "calc",
+            "file",
+            "sql",
+        }
         assert {ft.value for ft in RedcapFieldType} == expected
 
     def test_common_covers_both_sides(self) -> None:
@@ -267,8 +286,19 @@ class TestEnumCoverage:
         {rt.value for rt in RedcapFieldType}
         # Common must cover every REDCap type after dropdown/textarea normalization
         # (REDCap 'select' -> common 'dropdown'; REDCap 'textarea' -> common 'textarea')
-        missing = {"text", "textarea", "radio", "checkbox", "yesno", "truefalse",
-                   "slider", "descriptive", "calc", "file", "sql"} - common_values
+        missing = {
+            "text",
+            "textarea",
+            "radio",
+            "checkbox",
+            "yesno",
+            "truefalse",
+            "slider",
+            "descriptive",
+            "calc",
+            "file",
+            "sql",
+        } - common_values
         assert missing == set()
 
     @pytest.mark.parametrize("code", list(QSFElementCode))

@@ -355,7 +355,9 @@ def convert(
     if write_result.wrote_markdown_report and write_result.report_path is not None:
         console.print(f"[green]✓[/] Report written to [bold]{write_result.report_path}[/]")
     if write_result.wrote_json_report and write_result.report_json_path is not None:
-        console.print(f"[green]✓[/] JSON report written to [bold]{write_result.report_json_path}[/]")
+        console.print(
+            f"[green]✓[/] JSON report written to [bold]{write_result.report_json_path}[/]"
+        )
 
     if strict and preflight.report.has_problems():
         err_console.print(
@@ -587,7 +589,9 @@ def _run_wizard(
     if write_result.report_path is not None:
         console.print(f"[green]✓[/] Report written to [bold]{write_result.report_path}[/]")
     if write_result.report_json_path is not None:
-        console.print(f"[green]✓[/] JSON report written to [bold]{write_result.report_json_path}[/]")
+        console.print(
+            f"[green]✓[/] JSON report written to [bold]{write_result.report_json_path}[/]"
+        )
 
 
 if __name__ == "__main__":
