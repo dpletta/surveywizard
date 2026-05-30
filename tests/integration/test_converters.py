@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import html
 from pathlib import Path
 
 import pytest
@@ -21,15 +22,18 @@ from surveywizard.report import Level
 
 
 class TestFieldMappingLookups:
-    @pytest.mark.parametrize("row", TABLE)
+    @pytest.mark.parametrize("row", [r for r in TABLE if not r.reverse_only])
     def test_redcap_side_resolves(self, row) -> None:
         result = lookup_from_redcap(row.redcap_field_type, row.redcap_validation)
         assert result.qualtrics_question_type == row.qualtrics_question_type
 
     def test_qualtrics_side_mc_savr(self) -> None:
         row = lookup_from_qualtrics(QuestionType.MC, "SAVR")
-        assert row.redcap_field_type in {RedcapFieldType.RADIO, RedcapFieldType.YESNO,
-                                           RedcapFieldType.TRUEFALSE}
+        assert row.redcap_field_type in {
+            RedcapFieldType.RADIO,
+            RedcapFieldType.YESNO,
+            RedcapFieldType.TRUEFALSE,
+        }
 
     def test_qualtrics_te_with_email(self) -> None:
         row = lookup_from_qualtrics(QuestionType.TE, "SL", content_type="ValidEmailAddress")
@@ -38,6 +42,22 @@ class TestFieldMappingLookups:
     def test_unknown_falls_back_to_text(self) -> None:
         row = lookup_from_qualtrics(QuestionType.META, "Meta")
         assert row.redcap_field_type == RedcapFieldType.TEXT
+
+    def test_rank_order_maps_to_radio(self) -> None:
+        row = lookup_from_qualtrics(QuestionType.RO, "DND")
+        assert row.redcap_field_type == RedcapFieldType.RADIO
+        assert row.loss is not None
+
+    def test_redcap_radio_still_maps_to_mc(self) -> None:
+        # Reverse-only rows must not shadow the canonical RADIO→MC mapping.
+        row = lookup_from_redcap(RedcapFieldType.RADIO, RedcapValidationType.NONE)
+        assert row.qualtrics_question_type == QuestionType.MC
+
+    @pytest.mark.parametrize("qtype", [QuestionType.HL, QuestionType.HOTSPOT, QuestionType.DRAW])
+    def test_graphical_types_map_to_text_with_loss(self, qtype) -> None:
+        row = lookup_from_qualtrics(qtype)
+        assert row.redcap_field_type == RedcapFieldType.TEXT
+        assert row.loss is not None
 
 
 def _expected_qualtrics_question_count(project) -> int:
@@ -115,12 +135,19 @@ class TestRedcapToQualtrics:
             file_oid="test",
             creation_datetime="2026-04-21T00:00:00",
             globals=RedcapGlobalVariables(study_name="Test"),
-            instruments=[RedcapInstrument(oid="Form.a", name="a", title="Form A",
-                                           item_group_oids=["Group.a"])],
+            instruments=[
+                RedcapInstrument(
+                    oid="Form.a", name="a", title="Form A", item_group_oids=["Group.a"]
+                )
+            ],
             item_groups=[RedcapItemGroup(oid="Group.a", name="a", item_oids=["consent"])],
             fields=[
-                RedcapField(oid="consent", variable="consent",
-                            field_type=RedcapFieldType.YESNO, label="Consent?")
+                RedcapField(
+                    oid="consent",
+                    variable="consent",
+                    field_type=RedcapFieldType.YESNO,
+                    label="Consent?",
+                )
             ],
         )
         survey, _report = convert_redcap_to_qualtrics(project, seed=1)
@@ -143,20 +170,97 @@ class TestRedcapToQualtrics:
             file_oid="test",
             creation_datetime="2026-04-21T00:00:00",
             globals=RedcapGlobalVariables(study_name="Test"),
-            instruments=[RedcapInstrument(oid="Form.a", name="a", title="Form A",
-                                           item_group_oids=["Group.a"])],
+            instruments=[
+                RedcapInstrument(
+                    oid="Form.a", name="a", title="Form A", item_group_oids=["Group.a"]
+                )
+            ],
             item_groups=[RedcapItemGroup(oid="Group.a", name="a", item_oids=["age_group"])],
             fields=[
-                RedcapField(oid="age_group", variable="age_group",
-                            field_type=RedcapFieldType.CALC,
-                            label="Age group",
-                            calculation_equation="if([age] >= 65, 'senior', 'adult')")
+                RedcapField(
+                    oid="age_group",
+                    variable="age_group",
+                    field_type=RedcapFieldType.CALC,
+                    label="Age group",
+                    calculation_equation="if([age] >= 65, 'senior', 'adult')",
+                )
             ],
         )
         _survey, report = convert_redcap_to_qualtrics(project)
         assert report.has_problems()
         assert any(item.level == Level.WARNING for item in report.items)
         assert any("calc" in item.from_type for item in report.items)
+
+    def test_calc_formula_carried_into_question_text(self) -> None:
+        from surveywizard.models.redcap import (
+            RedcapField,
+            RedcapGlobalVariables,
+            RedcapInstrument,
+            RedcapItemGroup,
+            RedcapProject,
+        )
+
+        equation = "if([score] < 5 & [age] >= 65, 'senior', 'adult')"
+        project = RedcapProject(
+            file_oid="test",
+            creation_datetime="2026-04-21T00:00:00",
+            globals=RedcapGlobalVariables(study_name="Test"),
+            instruments=[
+                RedcapInstrument(
+                    oid="Form.a", name="a", title="Form A", item_group_oids=["Group.a"]
+                )
+            ],
+            item_groups=[RedcapItemGroup(oid="Group.a", name="a", item_oids=["age_group"])],
+            fields=[
+                RedcapField(
+                    oid="age_group",
+                    variable="age_group",
+                    field_type=RedcapFieldType.CALC,
+                    label="Age group",
+                    calculation_equation=equation,
+                )
+            ],
+        )
+        survey, _report = convert_redcap_to_qualtrics(project, seed=1)
+        q = survey.questions()[0]
+        assert (
+            q.QuestionText
+            == f"Age group<br><br>[Auto-calculated in REDCap: {html.escape(equation)}]"
+        )
+
+    def test_sql_query_carried_into_question_text(self) -> None:
+        from surveywizard.models.redcap import (
+            RedcapField,
+            RedcapGlobalVariables,
+            RedcapInstrument,
+            RedcapItemGroup,
+            RedcapProject,
+        )
+
+        query = "select record_id, name from redcap_data where name <> '' and active & 1 = 1"
+        project = RedcapProject(
+            file_oid="test",
+            creation_datetime="2026-04-21T00:00:00",
+            globals=RedcapGlobalVariables(study_name="Test"),
+            instruments=[
+                RedcapInstrument(
+                    oid="Form.a", name="a", title="Form A", item_group_oids=["Group.a"]
+                )
+            ],
+            item_groups=[RedcapItemGroup(oid="Group.a", name="a", item_oids=["lookup"])],
+            fields=[
+                RedcapField(
+                    oid="lookup",
+                    variable="lookup",
+                    field_type=RedcapFieldType.SQL,
+                    label="Pick a record",
+                    sql_query=query,
+                )
+            ],
+        )
+        survey, _report = convert_redcap_to_qualtrics(project, seed=1)
+        q = survey.questions()[0]
+        assert q.QuestionText == f"Pick a record<br><br>[REDCap SQL lookup: {html.escape(query)}]"
 
     def test_branching_logic_becomes_display_logic(self) -> None:
         from surveywizard.models.redcap import (
@@ -171,16 +275,25 @@ class TestRedcapToQualtrics:
             file_oid="test",
             creation_datetime="2026-04-21T00:00:00",
             globals=RedcapGlobalVariables(study_name="Test"),
-            instruments=[RedcapInstrument(oid="Form.a", name="a", title="A",
-                                           item_group_oids=["Group.a"])],
-            item_groups=[RedcapItemGroup(oid="Group.a", name="a",
-                                          item_oids=["age", "pregnant"])],
+            instruments=[
+                RedcapInstrument(oid="Form.a", name="a", title="A", item_group_oids=["Group.a"])
+            ],
+            item_groups=[RedcapItemGroup(oid="Group.a", name="a", item_oids=["age", "pregnant"])],
             fields=[
-                RedcapField(oid="age", variable="age", field_type=RedcapFieldType.TEXT,
-                            validation_type=RedcapValidationType.INT, label="Age"),
-                RedcapField(oid="pregnant", variable="pregnant",
-                            field_type=RedcapFieldType.YESNO, label="Pregnant?",
-                            branching_logic="[age] >= 18"),
+                RedcapField(
+                    oid="age",
+                    variable="age",
+                    field_type=RedcapFieldType.TEXT,
+                    validation_type=RedcapValidationType.INT,
+                    label="Age",
+                ),
+                RedcapField(
+                    oid="pregnant",
+                    variable="pregnant",
+                    field_type=RedcapFieldType.YESNO,
+                    label="Pregnant?",
+                    branching_logic="[age] >= 18",
+                ),
             ],
         )
         survey, _report = convert_redcap_to_qualtrics(project, seed=7)
@@ -211,6 +324,43 @@ class TestQualtricsToRedcap:
         for f in mc_fields:
             if f.code_list_ref:
                 assert project.code_list_by_oid(f.code_list_ref) is not None
+
+    def test_rank_order_becomes_radio_with_ranking_flag(self) -> None:
+        from surveywizard.models.qualtrics import (
+            Choice,
+            QualtricsSurvey,
+            Question,
+            SurveyElement,
+            SurveyEntry,
+        )
+
+        question = Question(
+            QuestionID="QID1",
+            QuestionText="Rank these options",
+            DataExportTag="rank_q",
+            QuestionType=QuestionType.RO,
+            Selector="DND",
+            Choices={"1": Choice(Display="Apple"), "2": Choice(Display="Banana")},
+            ChoiceOrder=[1, 2],
+        )
+        survey = QualtricsSurvey(
+            SurveyEntry=SurveyEntry(SurveyID="SV_1", SurveyName="Rank survey"),
+            SurveyElements=[
+                SurveyElement(
+                    SurveyID="SV_1",
+                    Element="SQ",
+                    PrimaryAttribute="QID1",
+                    SecondaryAttribute="Rank these options",
+                    Payload=question.model_dump(mode="json"),
+                ),
+            ],
+        )
+        project, report = convert_qualtrics_to_redcap(survey)
+        ranked = [f for f in project.fields if f.matrix_ranking]
+        assert len(ranked) == 1
+        assert ranked[0].field_type == RedcapFieldType.RADIO
+        assert ranked[0].code_list_ref is not None
+        assert any(item.category == "rank_order_fallback" for item in report.items)
 
 
 class TestRoundTripSurvival:

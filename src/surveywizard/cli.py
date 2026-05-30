@@ -45,7 +45,6 @@ class OutputFormat(StrEnum):
 app = typer.Typer(
     name="surveywizard",
     help="Bidirectional converter between REDCap XML and Qualtrics QSF.",
-    no_args_is_help=True,
     add_completion=False,
 )
 console = Console()
@@ -77,7 +76,9 @@ def _root(
     ),
 ) -> None:
     if ctx.invoked_subcommand is None and not version:
-        typer.echo(ctx.get_help())
+        # Bare ``surveywizard`` launches the interactive wizard. ``--help`` and
+        # ``--version`` are eager options that exit before reaching this point.
+        _run_wizard()
         raise typer.Exit()
 
 
@@ -354,7 +355,9 @@ def convert(
     if write_result.wrote_markdown_report and write_result.report_path is not None:
         console.print(f"[green]✓[/] Report written to [bold]{write_result.report_path}[/]")
     if write_result.wrote_json_report and write_result.report_json_path is not None:
-        console.print(f"[green]✓[/] JSON report written to [bold]{write_result.report_json_path}[/]")
+        console.print(
+            f"[green]✓[/] JSON report written to [bold]{write_result.report_json_path}[/]"
+        )
 
     if strict and preflight.report.has_problems():
         err_console.print(
@@ -487,6 +490,23 @@ def wizard(
     ),
 ) -> None:
     """Guided interactive conversion wizard."""
+    _run_wizard(
+        input_path=input_path,
+        output=output,
+        report=report,
+        report_json=report_json,
+        seed=seed,
+    )
+
+
+def _run_wizard(
+    input_path: Path | None = None,
+    output: Path | None = None,
+    report: Path | None = None,
+    report_json: Path | None = None,
+    seed: int | None = None,
+) -> None:
+    """Run the interactive conversion wizard. Shared by ``wizard`` and bare invocation."""
     console.print(
         Panel.fit(
             "Select the file you have, the format you want, and review likely sticking points "
@@ -569,7 +589,9 @@ def wizard(
     if write_result.report_path is not None:
         console.print(f"[green]✓[/] Report written to [bold]{write_result.report_path}[/]")
     if write_result.report_json_path is not None:
-        console.print(f"[green]✓[/] JSON report written to [bold]{write_result.report_json_path}[/]")
+        console.print(
+            f"[green]✓[/] JSON report written to [bold]{write_result.report_json_path}[/]"
+        )
 
 
 if __name__ == "__main__":

@@ -23,23 +23,35 @@ class TestVersion:
         assert "surveywizard" in result.stdout
         assert "0.1.0" in result.stdout
 
-    def test_no_args_shows_help(self, runner: CliRunner) -> None:
-        result = runner.invoke(app, [])
-        # Typer exits with 0 or 2 depending on help flow; we just need output
-        assert "Usage" in result.stdout or "Usage" in (result.stderr or "")
+    def test_no_args_launches_wizard(
+        self, runner: CliRunner, redcap_example_xml: Path, tmp_path: Path
+    ) -> None:
+        # Bare invocation now drops into the interactive wizard instead of help.
+        out_path = tmp_path / "bare-wizard-out.qsf"
+        result = runner.invoke(
+            app,
+            [],
+            input=f"{redcap_example_xml}\n1\n2\n{out_path}\nn\ny\n",
+        )
+        assert result.exit_code == 0
+        assert "SurveyWizard Wizard" in result.stdout
+        assert out_path.exists()
+
+    def test_help_flag_still_shows_usage(self, runner: CliRunner) -> None:
+        result = runner.invoke(app, ["--help"])
+        assert result.exit_code == 0
+        assert "Usage" in result.stdout
+        # --help must not hijack into the interactive wizard.
+        assert "SurveyWizard Wizard" not in result.stdout
 
 
 class TestValidate:
-    def test_validate_redcap_fixture(
-        self, runner: CliRunner, redcap_example_xml: Path
-    ) -> None:
+    def test_validate_redcap_fixture(self, runner: CliRunner, redcap_example_xml: Path) -> None:
         result = runner.invoke(app, ["validate", str(redcap_example_xml)])
         assert result.exit_code == 0
         assert "Valid REDCap" in result.stdout
 
-    def test_validate_qsf_fixture(
-        self, runner: CliRunner, qualtrics_fixtures: Path
-    ) -> None:
+    def test_validate_qsf_fixture(self, runner: CliRunner, qualtrics_fixtures: Path) -> None:
         conjoint = qualtrics_fixtures / "conjoint.qsf"
         result = runner.invoke(app, ["validate", str(conjoint)])
         assert result.exit_code == 0
@@ -64,13 +76,9 @@ class TestInfo:
         payload = json.loads(result.stdout)
         assert payload["field_count"] == 50
 
-    def test_info_preview_json(
-        self, runner: CliRunner, qualtrics_fixtures: Path
-    ) -> None:
+    def test_info_preview_json(self, runner: CliRunner, qualtrics_fixtures: Path) -> None:
         conjoint = qualtrics_fixtures / "conjoint.qsf"
-        result = runner.invoke(
-            app, ["info", str(conjoint), "-f", "json", "--preview-to", "redcap"]
-        )
+        result = runner.invoke(app, ["info", str(conjoint), "-f", "json", "--preview-to", "redcap"])
         assert result.exit_code == 0
         payload = json.loads(result.stdout)
         assert payload["preview"]["target_format"] == "redcap"
@@ -87,10 +95,14 @@ class TestConvert:
         result = runner.invoke(
             app,
             [
-                "convert", str(redcap_example_xml),
-                "-o", str(out_path),
-                "--report", str(report_path),
-                "--seed", "42",
+                "convert",
+                str(redcap_example_xml),
+                "-o",
+                str(out_path),
+                "--report",
+                str(report_path),
+                "--seed",
+                "42",
             ],
         )
         assert result.exit_code == 0, result.stdout + (result.stderr or "")
@@ -108,13 +120,11 @@ class TestConvert:
     ) -> None:
         conjoint = qualtrics_fixtures / "conjoint.qsf"
         out_path = tmp_path / "out.xml"
-        result = runner.invoke(
-            app, ["convert", str(conjoint), "-o", str(out_path)]
-        )
+        result = runner.invoke(app, ["convert", str(conjoint), "-o", str(out_path)])
         assert result.exit_code == 0
         assert out_path.exists()
         content = out_path.read_text(encoding="utf-8")
-        assert '<ODM' in content
+        assert "<ODM" in content
         assert 'xmlns:redcap="https://projectredcap.org"' in content
 
     def test_auto_report_written_for_problematic_conversion(
@@ -160,9 +170,7 @@ class TestConvert:
         # conjoint includes unsupported flow nodes and approximation warnings
         conjoint = qualtrics_fixtures / "conjoint.qsf"
         out_path = tmp_path / "out.xml"
-        result = runner.invoke(
-            app, ["convert", str(conjoint), "-o", str(out_path), "--strict"]
-        )
+        result = runner.invoke(app, ["convert", str(conjoint), "-o", str(out_path), "--strict"])
         assert result.exit_code == 2
 
 

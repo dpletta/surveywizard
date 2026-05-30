@@ -59,8 +59,14 @@ class Report:
         category: str = "general",
     ) -> None:
         self.items.append(
-            Degradation(level=level, field_oid=field_oid, from_type=from_type,
-                        to_type=to_type, detail=detail, category=category)
+            Degradation(
+                level=level,
+                field_oid=field_oid,
+                from_type=from_type,
+                to_type=to_type,
+                detail=detail,
+                category=category,
+            )
         )
 
     def info(
@@ -124,7 +130,11 @@ class Report:
             )
             bucket["count"] += 1
             bucket["levels"][item.level.value] += 1
-            if item.field_oid and item.field_oid not in bucket["fields"] and len(bucket["fields"]) < 5:
+            if (
+                item.field_oid
+                and item.field_oid not in bucket["fields"]
+                and len(bucket["fields"]) < 5
+            ):
                 bucket["fields"].append(item.field_oid)
         return sorted(
             categories.values(),

@@ -91,7 +91,7 @@ def embedded_data_expression(
         "Type": "Expression",
         "Operator": operator,
         "LeftOperand": embedded_data_uri(field_name),
-        "Description": f"<span class=\"ConjDesc\">If</span> {field_name}",
+        "Description": f'<span class="ConjDesc">If</span> {field_name}',
     }
     if right_operand is not None:
         node["RightOperand"] = right_operand

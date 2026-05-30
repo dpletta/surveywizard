@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import contextlib
+import html
 from datetime import UTC, datetime
 from typing import Any
 
@@ -42,8 +43,9 @@ class RedcapToQualtrics:
         self.project = project
         self.ids = IdMinter(seed=seed)
         self.survey_id = self.ids.survey()
-        self.report = Report(direction="redcap→qualtrics",
-                             source_name=project.globals.study_name or project.file_oid)
+        self.report = Report(
+            direction="redcap→qualtrics", source_name=project.globals.study_name or project.file_oid
+        )
         self._var_to_qid: dict[str, str] = {}
 
     def convert(self) -> QualtricsSurvey:
@@ -71,33 +73,39 @@ class RedcapToQualtrics:
 
         # Assemble SurveyElements array
         elements: list[SurveyElement] = []
-        elements.append(SurveyElement(
-            SurveyID=self.survey_id,
-            Element=QSFElementCode.BL.value,
-            PrimaryAttribute="Survey Blocks",
-            SecondaryAttribute=None,
-            Payload=[b.model_dump(mode="json") for b in blocks],
-        ))
-        elements.append(SurveyElement(
-            SurveyID=self.survey_id,
-            Element=QSFElementCode.FL.value,
-            PrimaryAttribute="Survey Flow",
-            SecondaryAttribute=None,
-            Payload=flow.model_dump(mode="json"),
-        ))
+        elements.append(
+            SurveyElement(
+                SurveyID=self.survey_id,
+                Element=QSFElementCode.BL.value,
+                PrimaryAttribute="Survey Blocks",
+                SecondaryAttribute=None,
+                Payload=[b.model_dump(mode="json") for b in blocks],
+            )
+        )
+        elements.append(
+            SurveyElement(
+                SurveyID=self.survey_id,
+                Element=QSFElementCode.FL.value,
+                PrimaryAttribute="Survey Flow",
+                SecondaryAttribute=None,
+                Payload=flow.model_dump(mode="json"),
+            )
+        )
         elements.append(self._build_survey_options_element())
         elements.append(self._build_question_count_element(len(questions)))
         elements.append(self._build_response_set_element())
         elements.append(self._build_stat_element())
 
         for question in questions:
-            elements.append(SurveyElement(
-                SurveyID=self.survey_id,
-                Element=QSFElementCode.SQ.value,
-                PrimaryAttribute=question.QuestionID,
-                SecondaryAttribute=question.QuestionText[:100] if question.QuestionText else "",
-                Payload=question.model_dump(mode="json"),
-            ))
+            elements.append(
+                SurveyElement(
+                    SurveyID=self.survey_id,
+                    Element=QSFElementCode.SQ.value,
+                    PrimaryAttribute=question.QuestionID,
+                    SecondaryAttribute=question.QuestionText[:100] if question.QuestionText else "",
+                    Payload=question.model_dump(mode="json"),
+                )
+            )
 
         return QualtricsSurvey(SurveyEntry=entry, SurveyElements=elements)
 
@@ -120,14 +128,15 @@ class RedcapToQualtrics:
         mapping = lookup_from_redcap(field.field_type, field.validation_type)
         qid = self._var_to_qid[field.variable]
 
+        question_text = self._question_text(field)
         question = Question(
             QuestionID=qid,
-            QuestionText=field.label,
+            QuestionText=question_text,
             DataExportTag=field.variable,
             QuestionType=mapping.qualtrics_question_type,
             Selector=mapping.qualtrics_selector,
             SubSelector=mapping.qualtrics_sub_selector,
-            QuestionDescription=field.label[:255] if field.label else "",
+            QuestionDescription=question_text[:255] if question_text else "",
             Configuration={"QuestionDescriptionOption": "UseText"},
             Validation=self._build_validation(field, mapping),
         )
@@ -138,9 +147,26 @@ class RedcapToQualtrics:
 
         return question
 
-    def _build_validation(
-        self, field: RedcapField, mapping: FieldMapping
-    ) -> QuestionValidation:
+    def _question_text(self, field: RedcapField) -> str:
+        """Build the Qualtrics question text, surfacing calc/sql expressions.
+
+        REDCap ``calc``/``sql`` fields have no runtime equivalent in Qualtrics, so
+        the originating expression is appended to the question text for the survey
+        author to translate into piped-text / EmbeddedData (calc) or to repopulate
+        the option list (sql). This is what the field-mapping loss notes promise.
+        """
+        label = field.label or ""
+        if field.field_type == RedcapFieldType.CALC and field.calculation_equation:
+            source_note = (
+                f"[Auto-calculated in REDCap: {html.escape(field.calculation_equation)}]"
+            )
+            return f"{label}<br><br>{source_note}" if label else source_note
+        if field.field_type == RedcapFieldType.SQL and field.sql_query:
+            source_note = f"[REDCap SQL lookup: {html.escape(field.sql_query)}]"
+            return f"{label}<br><br>{source_note}" if label else source_note
+        return label
+
+    def _build_validation(self, field: RedcapField, mapping: FieldMapping) -> QuestionValidation:
         settings = ValidationSettings(
             ForceResponse="ON" if field.required else "OFF",
             ForceResponseType="ON",
@@ -181,7 +207,8 @@ class RedcapToQualtrics:
         cl: RedcapCodeList | None = self.project.code_list_by_oid(field.code_list_ref)
         if cl is None:
             self.report.warn(
-                "redcap:code_list", "qsf:Choices",
+                "redcap:code_list",
+                "qsf:Choices",
                 f"CodeList {field.code_list_ref!r} missing — choices left empty.",
                 field.oid,
                 category="missing_codelist",
@@ -204,7 +231,8 @@ class RedcapToQualtrics:
             ast = rexpr.parse(field.branching_logic)
         except Exception as err:
             self.report.warn(
-                "redcap:branching", "qsf:DisplayLogic",
+                "redcap:branching",
+                "qsf:DisplayLogic",
                 f"Could not parse branching logic `{field.branching_logic}` — dropped. {err}",
                 field.oid,
                 category="branching_parse_error",
@@ -263,7 +291,8 @@ class RedcapToQualtrics:
         field_types = {f.field_type for f in rows}
         if len(field_types) > 1:
             self.report.warn(
-                "redcap:matrix_group", "qsf:Matrix",
+                "redcap:matrix_group",
+                "qsf:Matrix",
                 "Matrix group rows have mixed field types — using the first row's type.",
                 first.oid,
                 category="matrix_mixed_types",
@@ -322,7 +351,8 @@ class RedcapToQualtrics:
             cl: RedcapCodeList | None = self.project.code_list_by_oid(cl_ref)
             if cl is None:
                 self.report.warn(
-                    "redcap:code_list", "qsf:Answers",
+                    "redcap:code_list",
+                    "qsf:Answers",
                     f"CodeList {cl_ref!r} missing — matrix scale left empty.",
                     first.oid,
                     category="missing_codelist",
@@ -343,7 +373,8 @@ class RedcapToQualtrics:
         self._attach_display_logic(question, first)
 
         self.report.info(
-            "redcap:matrix_group", "qsf:Matrix",
+            "redcap:matrix_group",
+            "qsf:Matrix",
             f"Grouped {len(rows)} REDCap fields into one Matrix question (export tag {export_tag!r}).",
             first.oid,
             category="matrix_grouping",
@@ -410,13 +441,15 @@ class RedcapToQualtrics:
             if instrument_for_field.get(field.oid) is None:
                 uncategorized.append(BlockElement(Type="Question", QuestionID=question.QuestionID))
         if uncategorized:
-            blocks.append(Block(
-                Type="Standard",
-                Description="Uncategorized",
-                ID=self.ids.block(),
-                BlockElements=uncategorized,
-                Options=BlockOptions(),
-            ))
+            blocks.append(
+                Block(
+                    Type="Standard",
+                    Description="Uncategorized",
+                    ID=self.ids.block(),
+                    BlockElements=uncategorized,
+                    Options=BlockOptions(),
+                )
+            )
 
         return blocks, block_elements_by_instrument
 
@@ -492,10 +525,13 @@ def convert_redcap_to_qualtrics(
     survey = c.convert()
     # Record lossless-by-design facts as info entries
     if not c.report.has_problems() and not c.report.items:
-        c.report.info("redcap:project", "qsf:survey",
-                      f"Converted {len(project.fields)} fields into "
-                      f"{len(survey.questions())} Qualtrics questions with no degradations.",
-                      category="conversion_summary")
+        c.report.info(
+            "redcap:project",
+            "qsf:survey",
+            f"Converted {len(project.fields)} fields into "
+            f"{len(survey.questions())} Qualtrics questions with no degradations.",
+            category="conversion_summary",
+        )
     return survey, c.report
 
 

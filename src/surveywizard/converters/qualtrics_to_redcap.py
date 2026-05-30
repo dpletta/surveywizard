@@ -109,9 +109,7 @@ class QualtricsToRedcap:
             code_lists=code_lists,
         )
 
-    def _convert_question(
-        self, q: Question
-    ) -> tuple[list[RedcapField], list[RedcapCodeList]]:
+    def _convert_question(self, q: Question) -> tuple[list[RedcapField], list[RedcapCodeList]]:
         """Convert one Qualtrics question into 1+ REDCap fields (+ codelists).
 
         Matrix questions expand to one REDCap field per row sharing a common
@@ -178,14 +176,16 @@ class QualtricsToRedcap:
 
         if q.QuestionType == QuestionType.DB:
             self.report.info(
-                f"qsf:{q.QuestionType.value}", f"redcap:{mapping.redcap_field_type.value}",
+                f"qsf:{q.QuestionType.value}",
+                f"redcap:{mapping.redcap_field_type.value}",
                 "Descriptive text carried across — visible to respondent but captures no data.",
                 variable,
                 category="descriptive_text",
             )
         if q.QuestionType == QuestionType.SBS:
             self.report.warn(
-                f"qsf:{q.QuestionType.value}", f"redcap:{mapping.redcap_field_type.value}",
+                f"qsf:{q.QuestionType.value}",
+                f"redcap:{mapping.redcap_field_type.value}",
                 "Qualtrics side-by-side collapsed to a single REDCap text field — "
                 "reconstruct manually as a matrix group post-import.",
                 variable,
@@ -193,11 +193,22 @@ class QualtricsToRedcap:
             )
         if q.QuestionType in {QuestionType.HL, QuestionType.HOTSPOT, QuestionType.DRAW}:
             self.report.warn(
-                f"qsf:{q.QuestionType.value}", f"redcap:{mapping.redcap_field_type.value}",
+                f"qsf:{q.QuestionType.value}",
+                f"redcap:{mapping.redcap_field_type.value}",
                 "Qualtrics graphical question type has no REDCap equivalent — "
                 "emitted as text for manual replacement.",
                 variable,
                 category="graphical_question_fallback",
+            )
+        if q.QuestionType == QuestionType.RO:
+            field.matrix_ranking = True
+            self.report.warn(
+                f"qsf:{q.QuestionType.value}",
+                f"redcap:{mapping.redcap_field_type.value}",
+                "Qualtrics rank-order question collapsed to a single REDCap radio field with "
+                "the ranked options as choices — reconstruct the ranking manually post-import.",
+                variable,
+                category="rank_order_fallback",
             )
 
         self._question_id_to_oids[q.QuestionID] = [field.oid]
@@ -276,7 +287,9 @@ class QualtricsToRedcap:
             if isinstance(sw_vars, list) and idx < len(sw_vars) and isinstance(sw_vars[idx], str):
                 row_var = _sanitize_variable(sw_vars[idx], fallback=f"row{idx + 1}")[:40]
             else:
-                row_slug = _sanitize_variable(row_label, fallback=f"row{idx + 1}") or f"row{idx + 1}"
+                row_slug = (
+                    _sanitize_variable(row_label, fallback=f"row{idx + 1}") or f"row{idx + 1}"
+                )
                 row_var = f"{base_variable}_{row_slug}"[:40]
             # Disambiguate collisions within this matrix
             counter = 1
@@ -310,9 +323,12 @@ class QualtricsToRedcap:
 
         if not defer_qid_registration:
             self.report.info(
-                f"qsf:Matrix/{selector}", f"redcap:{row_field_type.value}",
+                f"qsf:Matrix/{selector}",
+                f"redcap:{row_field_type.value}",
                 f"Expanded Matrix into {len(fields)} row fields sharing matrix group "
-                f"{matrix_group!r}" + (f" and codelist {shared_code_list.oid!r}" if shared_code_list else "") + ".",
+                f"{matrix_group!r}"
+                + (f" and codelist {shared_code_list.oid!r}" if shared_code_list else "")
+                + ".",
                 base_variable,
                 category="matrix_expansion",
             )
@@ -336,7 +352,8 @@ class QualtricsToRedcap:
                 continue
             if col.get("QuestionType") != "Matrix":
                 self.report.warn(
-                    "qsf:SBS", "redcap:unknown",
+                    "qsf:SBS",
+                    "redcap:unknown",
                     f"SBS AdditionalQuestions[{ck!r}] is not Matrix; skipped.",
                     base_variable,
                     category="side_by_side_fallback",
@@ -367,9 +384,7 @@ class QualtricsToRedcap:
             }
             col_q = Question.model_validate(col_payload)
             sub_base = f"{base_variable}_c{col_idx}"
-            rows, cls = self._expand_matrix(
-                col_q, sub_base, defer_qid_registration=True
-            )
+            rows, cls = self._expand_matrix(col_q, sub_base, defer_qid_registration=True)
             all_fields.extend(rows)
             all_lists.extend(cls)
 
@@ -381,7 +396,8 @@ class QualtricsToRedcap:
         self._question_id_to_oids[q.QuestionID] = [f.oid for f in all_fields]
 
         self.report.info(
-            "qsf:SBS/SBSMatrix", "redcap:matrix",
+            "qsf:SBS/SBSMatrix",
+            "redcap:matrix",
             f"Expanded side-by-side into {len(all_fields)} fields across {len(keys)} column matrix groups.",
             base_variable,
             category="side_by_side_expansion",
@@ -414,7 +430,8 @@ class QualtricsToRedcap:
             branching_logic=branching,
         )
         self.report.warn(
-            f"qsf:{q.QuestionType.value}", f"redcap:{mapping.redcap_field_type.value}",
+            f"qsf:{q.QuestionType.value}",
+            f"redcap:{mapping.redcap_field_type.value}",
             "Qualtrics side-by-side could not be expanded — emitted as a single REDCap text field.",
             base_variable,
             category="side_by_side_fallback",
@@ -429,9 +446,7 @@ class QualtricsToRedcap:
         content_type = None
         with contextlib.suppress(AttributeError):
             content_type = getattr(q.Validation.Settings, "ContentType", None)
-        mapping = lookup_from_qualtrics(
-            QuestionType.TE, "SL", "", content_type
-        )
+        mapping = lookup_from_qualtrics(QuestionType.TE, "SL", "", content_type)
 
         matrix_group = f"m_{base_variable}"[:40]
 
@@ -485,7 +500,8 @@ class QualtricsToRedcap:
             self._qid_to_variable[q.QuestionID] = fields[0].variable
 
         self.report.info(
-            "qsf:TE/FORM", f"redcap:{mapping.redcap_field_type.value}",
+            "qsf:TE/FORM",
+            f"redcap:{mapping.redcap_field_type.value}",
             f"Expanded TE+FORM into {len(fields)} text fields sharing matrix group {matrix_group!r}.",
             base_variable,
             category="form_expansion",
@@ -522,7 +538,8 @@ class QualtricsToRedcap:
         )
         if not translated:
             self.report.warn(
-                "qsf:Validation.CustomValidation", "redcap:branching_logic",
+                "qsf:Validation.CustomValidation",
+                "redcap:branching_logic",
                 "Qualtrics CustomValidation logic was not translated to REDCap (unsupported "
                 "or empty); review field after import.",
                 variable,
@@ -530,7 +547,8 @@ class QualtricsToRedcap:
             )
             return existing
         self.report.info(
-            "qsf:Validation.CustomValidation", "redcap:branching_logic",
+            "qsf:Validation.CustomValidation",
+            "redcap:branching_logic",
             "Merged CustomValidation.Logic into branching_logic as an approximation; "
             "REDCap cannot enforce custom error messages from Qualtrics.",
             variable,
@@ -541,9 +559,7 @@ class QualtricsToRedcap:
         return translated or existing
 
     @staticmethod
-    def _infer_data_type(
-        field_type: RedcapFieldType, validation: RedcapValidationType
-    ) -> str:
+    def _infer_data_type(field_type: RedcapFieldType, validation: RedcapValidationType) -> str:
         if validation in {RedcapValidationType.INT}:
             return "integer"
         if validation in {
@@ -627,9 +643,7 @@ class QualtricsToRedcap:
                 field_oids.append(field.oid)
             if not field_oids:
                 continue
-            item_groups.append(
-                RedcapItemGroup(oid=ig_oid, name=inst_name, item_oids=field_oids)
-            )
+            item_groups.append(RedcapItemGroup(oid=ig_oid, name=inst_name, item_oids=field_oids))
             instruments.append(
                 RedcapInstrument(
                     oid=f"Form.{inst_name}",
@@ -719,7 +733,8 @@ def convert_qualtrics_to_redcap(survey: QualtricsSurvey) -> tuple[RedcapProject,
     project = c.convert()
     if not c.report.has_problems() and not c.report.items:
         c.report.info(
-            "qsf:survey", "redcap:project",
+            "qsf:survey",
+            "redcap:project",
             f"Converted {len(survey.questions())} Qualtrics questions into "
             f"{len(project.fields)} REDCap fields with no degradations.",
             category="conversion_summary",

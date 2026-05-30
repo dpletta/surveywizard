@@ -26,9 +26,7 @@ def parse_qsf(source: str | Path | bytes) -> QualtricsSurvey:
         raise ParseError(f"QSF JSON parse error: {err}") from err
 
     if not isinstance(data, dict) or "SurveyEntry" not in data or "SurveyElements" not in data:
-        raise ParseError(
-            "QSF missing required top-level keys 'SurveyEntry' or 'SurveyElements'"
-        )
+        raise ParseError("QSF missing required top-level keys 'SurveyEntry' or 'SurveyElements'")
 
     try:
         return QualtricsSurvey.model_validate(data)
